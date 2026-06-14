@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IntegriSpace 2.0 - Perfil</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .profile-layout, .profile-layout * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        .profile-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 18px; 
+            padding: 20px 12px 100px 12px;
+        }
+        .profile-header {
+            text-align: center;
+            padding: 10px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+        .avatar-box {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 16px rgba(99, 102, 241, 0.4);
+        }
+        .avatar-box svg {
+            width: 40px;
+            height: 40px;
+            fill: #ffffff;
+        }
+        .profile-info h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+        .section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #a855f7;
+            margin-bottom: 2px;
+            display: block;
+            letter-spacing: 0.5px;
+        }
+        .info-card {
+            background: rgba(30, 41, 59, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            width: 100%;
+        }
+        .selectable-card {
+            background: rgba(15, 23, 42, 0.4);
+            border: 2px solid rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
+            padding: 14px 10px;
+            text-align: center;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 82px;
+            transition: all 0.2s ease;
+        }
+        .selectable-card svg {
+            width: 24px;
+            height: 24px;
+            fill: #64748b;
+            transition: fill 0.2s ease;
+        }
+        .selectable-card span {
+            color: #94a3b8;
+            font-size: 13px;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+        .selectable-card.active {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: #6366f1;
+        }
+        .selectable-card.active svg { fill: #6366f1; }
+        .selectable-card.active span { color: #ffffff; }
+
+        .pace-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-top: 4px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .pace-chip {
+            background: rgba(15, 23, 42, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            padding: 10px 8px;
+            text-align: center;
+            color: #64748b;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .pace-chip.active {
+            background: rgba(168, 85, 247, 0.12);
+            border-color: #a855f7;
+            color: #ffffff;
+        }
+
+        /* Input de Masa Corporal */
+        .weight-manual-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 4px;
+            padding: 10px 12px;
+            background: rgba(15, 23, 42, 0.4);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .weight-manual-box label {
+            font-size: 13px;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .weight-input-container {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .txt-weight {
+            width: 70px;
+            background: rgba(30, 41, 59, 0.9);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 700;
+            text-align: center;
+            padding: 5px 4px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .txt-weight:focus {
+            border-color: #a855f7;
+            box-shadow: 0 0 8px rgba(168, 85, 247, 0.25);
+        }
+        .weight-unit {
+            font-size: 13px;
+            color: #a855f7;
+            font-weight: 700;
+        }
+
+        /* Botón Guardar Preferencias */
+        .btn-save {
+            background: linear-gradient(135deg, #059669, #10b981);
+            color: #ffffff;
+            border: none;
+            border-radius: 14px;
+            padding: 14px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            margin-top: 10px;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+            transition: all 0.2s;
+        }
+        .btn-save:hover {
+            opacity: 0.95;
+            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
+        }
+
+        .btn-logout {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 14px;
+            padding: 14px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            margin-top: 4px;
+            transition: all 0.2s;
+        }
+        .btn-logout:hover { background: rgba(239, 68, 68, 0.16); }
+
+        .custom-bottom-nav {
+            position: absolute !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            background: #0c1428 !important; 
+            border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+            display: flex !important;
+            justify-content: space-around !important;
+            padding: 10px 0 14px 0 !important;
+            z-index: 9999 !important;
+            border-radius: 0 0 30px 30px;
+        }
+        .custom-nav-item {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            gap: 5px !important;
+            color: #55657e !important;
+            text-decoration: none !important;
+            font-size: 12px !important;
+            font-weight: 600 !important;
+            width: 65px !important;
+            background: none !important; 
+            border: none !important;     
+            padding: 0 !important;
+        }
+        .custom-nav-item.active { color: #6366f1 !important; }
+        .custom-nav-item svg { width: 24px !important; height: 24px !important; display: block !important; }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper-movil" style="position: relative; overflow: hidden;">
+        <div class="contenido-app">
+            <div class="profile-layout">
+                
+                <div class="profile-header">
+                    <div class="avatar-box">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                    </div>
+                    <div class="profile-info">
+                        <h2 id="lblProfileUser">Usuario</h2>
+                    </div>
+                </div>
+
+                <span class="section-title">Tu Perfil de Movilidad</span>
+                <div class="info-card">
+                    <div class="options-grid" id="gridMobility">
+                        <div class="selectable-card active" data-profile="general">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M13.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM9.8 8.9L7 21.5h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3c1.3 1.5 3.3 2.5 5.5 2.5v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.7-1.1-1-1.8-1-.3 0-.5.1-.8.1L6 8.3v5.2h2V9.9l1.8-1z"/>
+                            </svg>
+                            <span>Usuario General</span>
+                        </div>
+                        
+                        <div class="selectable-card" data-profile="movilidad">
+                            <svg viewBox="0 0 24 24">
+                                <circle cx="12" cy="4" r="2"/>
+                                <path d="M19 13v-2c-2.14 0-4.14-.86-5.66-2.26l-1.47-1.35c-.39-.37-.9-.59-1.46-.59H10c-1.1 0-2 .9-2 2v5c0 1.1.9 2 2 2h3.5l1.5 3.5H19v-2h-2.5l-1.5-3.5H19zm-9 4c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/>
+                            </svg>
+                            <span>Movilidad Reducida</span>
+                        </div>
+
+                        <div class="selectable-card" data-profile="runner">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M13.49 5.48c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm-3.6 13.9l1-4.4 2.1 2v6h2v-7.5l-2.1-2 .6-3c1.3 1.5 3.3 2.5 5.5 2.5v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.7-1.1-1-1.8-1-.3 0-.5.1-.8.1L3.99 8.58v5.2h2V10.2l1.9-1z"/>
+                            </svg>
+                            <span>Runner</span>
+                        </div>
+                        <div class="selectable-card" data-profile="turista">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 11c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-8c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"/>
+                            </svg>
+                            <span>Turista</span>
+                        </div>
+                    </div>
+
+                    <div class="pace-container" id="gridPace">
+                        <div class="pace-chip active" data-pace="camina" id="paceCamina">🚶 Camina tranquilo</div>
+                        <div class="pace-chip" data-pace="prisa" id="pacePrisa">⚡ Va con prisa</div>
+                        <div class="pace-chip" data-pace="corre" id="paceCorre">🏃 Trote / Corre</div>
+                        <div class="pace-chip" data-pace="explora" id="paceExplora">📸 Explora el área</div>
+                    </div>
+
+                    <div class="weight-manual-box">
+                        <label for="txtWeightValue">Masa corporal:</label>
+                        <div class="weight-input-container">
+                            <input type="number" id="txtWeightValue" class="txt-weight" value="70" min="20" max="250">
+                            <span class="weight-unit">kg</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-save" id="btnSaveConfig">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                        <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                        <polyline points="7 3 7 8 15 8"></polyline>
+                    </svg>
+                    Guardar preferencias
+                </button>
+
+                <button class="btn-logout" id="btnExitSession">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                    Cerrar sesión
+                </button>
+
+            </div>
+        </div>
+
+        <nav class="custom-bottom-nav">
+            <a href="dashboard.html" class="custom-nav-item">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3z" fill="#f97316"/>
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8h5z" fill="#22c55e"/>
+                </svg>
+                <span>Inicio</span>
+            </a>
+            <a href="historial.html" class="custom-nav-item">
+                <svg viewBox="0 0 24 24">
+                    <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6z" fill="#fef08a"/>
+                    <path d="M13 9V3.5L18.5 9H13z" fill="#ca8a04"/>
+                </svg>
+                <span>Historial</span>
+            </a>
+            <a href="evaluacion.html" class="custom-nav-item">
+                <svg viewBox="0 0 24 24">
+                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="#a855f7"/>
+                </svg>
+                <span>Ruta</span>
+            </a>
+            <a href="perfil.html" class="custom-nav-item active">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="7" r="4" fill="#c084fc"/>
+                    <path d="M12 14c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="#a855f7"/>
+                </svg>
+                <span>Perfil</span>
+            </a>
+        </nav>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const usuarioActiva = localStorage.getItem('sesionActiva') || "Usuario General";
+            document.getElementById('lblProfileUser').textContent = usuarioActiva;
+
+            const txtWeightValue = document.getElementById('txtWeightValue');
+            const mobilityCards = document.querySelectorAll('#gridMobility .selectable-card');
+            const paceChips = document.querySelectorAll('#gridPace .pace-chip');
+
+            const chipCamina = document.getElementById('paceCamina');
+            const chipPrisa = document.getElementById('pacePrisa');
+            const chipCorre = document.getElementById('paceCorre');
+
+            const savedWeight = localStorage.getItem('user_weight');
+            const savedProfile = localStorage.getItem('user_profile');
+            const savedPace = localStorage.getItem('user_pace');
+
+            // Textos adaptados de forma simplificada y respetuosa
+            function renderInclusiveTexts(perfil) {
+                if (perfil === "movilidad") {
+                    chipCamina.innerHTML = "♿ Movilidad reducida (Base)";
+                    chipPrisa.innerHTML = "⚡ Movilidad reducida (Rápido)";
+                    chipCorre.innerHTML = "💪 Movilidad reducida (Intenso)";
+                } else {
+                    chipCamina.innerHTML = "🚶 Camina tranquilo";
+                    chipPrisa.innerHTML = "⚡ Va con prisa";
+                    chipCorre.innerHTML = "🏃 Trote / Corre";
+                }
+            }
+
+            if (savedWeight) txtWeightValue.value = savedWeight;
+            
+            if (savedProfile) {
+                mobilityCards.forEach(c => c.classList.remove('active'));
+                const target = document.querySelector(`[data-profile="${savedProfile}"]`);
+                if (target) target.classList.add('active');
+                renderInclusiveTexts(savedProfile);
+            } else {
+                renderInclusiveTexts('general');
+            }
+
+            if (savedPace) {
+                paceChips.forEach(c => c.classList.remove('active'));
+                const target = document.querySelector(`[data-pace="${savedPace}"]`);
+                if (target) target.classList.add('active');
+            }
+
+            function clearPaceActive() {
+                paceChips.forEach(c => c.classList.remove('active'));
+            }
+
+            mobilityCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    mobilityCards.forEach(c => c.classList.remove('active'));
+                    card.classList.add('active');
+                    
+                    const perfil = card.getAttribute('data-profile');
+                    clearPaceActive();
+                    renderInclusiveTexts(perfil);
+                    
+                    if (perfil === "movilidad") {
+                        const target = document.querySelector('[data-pace="camina"]');
+                        if(target) target.classList.add('active');
+                    } else if (perfil === "runner") {
+                        const target = document.querySelector('[data-pace="corre"]');
+                        if(target) target.classList.add('active');
+                    } else if (perfil === "turista") {
+                        const target = document.querySelector('[data-pace="explora"]');
+                        if(target) target.classList.add('active');
+                    } else {
+                        const target = document.querySelector('[data-pace="camina"]');
+                        if(target) target.classList.add('active');
+                    }
+                });
+            });
+
+            paceChips.forEach(chip => {
+                chip.addEventListener('click', () => {
+                    clearPaceActive();
+                    chip.classList.add('active');
+                });
+            });
+
+            if (!savedWeight && (usuarioActiva.toLowerCase().includes("dominguez") || usuarioActiva === "admin")) {
+                mobilityCards.forEach(c => c.classList.remove('active'));
+                const targetMobility = document.querySelector('[data-profile="movilidad"]');
+                if (targetMobility) targetMobility.classList.add('active');
+                
+                clearPaceActive();
+                renderInclusiveTexts('movilidad');
+                const targetPace = document.querySelector('[data-pace="camina"]');
+                if(targetPace) targetPace.classList.add('active');
+
+                txtWeightValue.value = "85";
+            }
+
+            document.getElementById('btnSaveConfig').addEventListener('click', () => {
+                const activeProfileCard = document.querySelector('#gridMobility .selectable-card.active');
+                const activePaceChip = document.querySelector('#gridPace .pace-chip.active');
+                
+                const currentWeight = txtWeightValue.value;
+                const currentProfile = activeProfileCard ? activeProfileCard.getAttribute('data-profile') : 'general';
+                const currentPace = activePaceChip ? activePaceChip.getAttribute('data-pace') : 'camina';
+
+                localStorage.setItem('user_weight', currentWeight);
+                localStorage.setItem('user_profile', currentProfile);
+                localStorage.setItem('user_pace', currentPace);
+
+                alert("¡Preferencias guardadas exitosamente!");
+            });
+
+            document.getElementById('btnExitSession').addEventListener('click', () => {
+                localStorage.removeItem('sesionActiva');
+                localStorage.removeItem('user_weight');
+                localStorage.removeItem('user_profile');
+                localStorage.removeItem('user_pace');
+                alert("Cerrando sesión de forma segura...");
+                window.location.href = '../index.html';
+            });
+        });
+    </script>
+</body>
+</html>

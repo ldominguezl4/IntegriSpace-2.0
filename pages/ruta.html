@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IntegriSpace 2.0 - Nueva Ruta</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/ruta.css">
+    <style>
+        /* Estilos base garantizados para el contenedor móvil */
+        .route-layout, .route-layout * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        .route-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 16px; 
+            padding: 20px 12px 100px 12px;
+        }
+        .section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #a855f7;
+            margin-bottom: 2px;
+            display: block;
+            letter-spacing: 0.5px;
+        }
+        .route-card {
+            background: rgba(30, 41, 59, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .input-group label {
+            font-size: 13px;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .route-input {
+            width: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 14px;
+            padding: 10px 12px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .route-input:focus {
+            border-color: #6366f1;
+        }
+
+        /* Banner informativo del perfil cargado automáticamente */
+        .profile-badge-banner {
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 12px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .profile-badge-banner.movilidad-activa {
+            background: rgba(168, 85, 247, 0.1);
+            border-color: rgba(168, 85, 247, 0.2);
+        }
+        .badge-icon {
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .badge-icon svg { width: 20px; height: 20px; fill: #6366f1; }
+        .profile-badge-banner.movilidad-activa .badge-icon svg { fill: #a855f7; }
+        
+        .badge-text { display: flex; flex-direction: column; }
+        .badge-text .p-title { font-size: 13px; color: #ffffff; font-weight: 700; }
+        .badge-text .p-desc { font-size: 11px; color: #94a3b8; }
+
+        /* Panel de Resultados del cálculo */
+        .results-box {
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
+            padding: 14px;
+            display: none; 
+            flex-direction: column;
+            gap: 8px;
+        }
+        .result-item { display: flex; justify-content: space-between; font-size: 13px; color: #94a3b8; }
+        .result-item strong { color: #ffffff; }
+
+        .btn-calc {
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            color: #ffffff;
+            border: none;
+            border-radius: 14px;
+            padding: 14px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            margin-top: 6px;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+        }
+
+        /* Barra de navegación inferior con rutas relativas para producción/GitHub */
+        .custom-bottom-nav {
+            position: fixed !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            background: #0c1428 !important; 
+            border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+            display: flex !important;
+            justify-content: space-around !important;
+            padding: 10px 0 14px 0 !important;
+            z-index: 9999 !important;
+        }
+        .custom-nav-item {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            gap: 5px !important;
+            color: #55657e !important;
+            text-decoration: none !important;
+            font-size: 12px !important;
+            font-weight: 600 !important;
+            width: 65px !important;
+            background: none !important; 
+            border: none !important;     
+            padding: 0 !important;
+        }
+        .custom-nav-item.active { color: #a855f7 !important; }
+        .custom-nav-item svg { width: 24px !important; height: 24px !important; display: block !important; }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper-movil" style="position: relative; overflow-y: auto;">
+        <div class="contenido-app">
+            <div class="route-layout">
+                
+                <span class="section-title">Planificar Nueva Ruta</span>
+                
+                <div class="profile-badge-banner" id="bannerPreferencias">
+                    <div class="badge-icon" id="bannerIcon"></div>
+                    <div class="badge-text">
+                        <span class="p-title" id="bannerTitle">Cargando perfil...</span>
+                        <span class="p-desc" id="bannerDesc">Detectando ritmo optimizado</span>
+                    </div>
+                </div>
+
+                <div class="route-card">
+                    <div class="input-group">
+                        <label for="txtOrigen">Punto de Origen:</label>
+                        <input type="text" id="txtOrigen" class="route-input" value="Mi ubicación actual">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="txtDestino">Punto de Destino:</label>
+                        <input type="text" id="txtDestino" class="route-input" placeholder="Ej: Estación Universitaria">
+                    </div>
+
+                    <div class="results-box" id="boxResults">
+                        <div class="result-item">Distancia aproximada: <strong id="resDistancia">0.0 km</strong></div>
+                        <div class="result-item">Ritmo / Condición: <strong id="resRitmo">Normal</strong></div>
+                        <div class="result-item">Tiempo estimado de viaje: <strong id="resTiempo" style="color: #10b981; font-size: 15px;">0 min</strong></div>
+                        <div class="result-item">Gasto energético calculado: <strong id="resCalorias">0 kcal</strong></div>
+                    </div>
+
+                    <button class="btn-calc" id="btnCalcularRuta">Calcular ruta optimizada</button>
+                </div>
+
+            </div>
+        </div>
+
+        <nav class="custom-bottom-nav">
+            <a href="dashboard.html" class="custom-nav-item">
+                <svg viewBox="0 0 24 24"><path d="M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3z" fill="#55657e"/></svg>
+                <span>Inicio</span>
+            </a>
+            <a href="historial.html" class="custom-nav-item">
+                <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6z" fill="#55657e"/></svg>
+                <span>Historial</span>
+            </a>
+            <a href="ruta.html" class="custom-nav-item active">
+                <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="#a855f7"/></svg>
+                <span>Ruta</span>
+            </a>
+            <a href="perfil.html" class="custom-nav-item">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="4" fill="#55657e"/><path d="M12 14c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="#55657e"/></svg>
+                <span>Perfil</span>
+            </a>
+        </nav>
+    </div>
+
+    <script src="../js/ruta.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Lee los datos guardados en el LocalStorage de tu app de forma limpia
+            const userProfile = localStorage.getItem('user_profile') || 'general';
+            const userPace = localStorage.getItem('user_pace') || 'camina';
+            const userCompany = localStorage.getItem('user_company') || 'solo';
+            const userWeight = parseFloat(localStorage.getItem('user_weight')) || 85;
+
+            const bannerPreferencias = document.getElementById('bannerPreferencias');
+            const bannerIcon = document.getElementById('bannerIcon');
+            const bannerTitle = document.getElementById('bannerTitle');
+            const bannerDesc = document.getElementById('bannerDesc');
+
+            let factorVelocidad = 4.5; 
+            let paceLabel = "Uso General";
+
+            // SVGs limpios para usar según el perfil activo
+            const icons = {
+                general: `<svg viewBox="0 0 24 24"><path d="M13.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM9.8 8.9L7 21.5h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3c1.3 1.5 3.3 2.5 5.5 2.5v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.7-1.1-1-1.8-1-.3 0-.5.1-.8.1L6 8.3v5.2h2V9.9l1.8-1z"/></svg>`,
+                movilidad: `<svg viewBox="0 0 24 24"><circle cx="12" cy="4" r="2"/><path d="M19 13v-2c-2.14 0-4.14-.86-5.66-2.26l-1.47-1.35c-.39-.37-.9-.59-1.46-.59H10c-1.1 0-2 .9-2 2v5c0 1.1.9 2 2 2h3.5l1.5 3.5H19v-2h-2.5l-1.5-3.5H19zm-9 4c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/></svg>`,
+                runner: `<svg viewBox="0 0 24 24"><path d="M13.49 5.48c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm-3.6 13.9l1-4.4 2.1 2v6h2v-7.5l-2.1-2 .6-3c1.3 1.5 3.3 2.5 5.5 2.5v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.7-1.1-1-1.8-1-.3 0-.5.1-.8.1L3.99 8.58v5.2h2V10.2l1.9-1z"/></svg>`,
+                turista: `<svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 11c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-8c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"/></svg>`
+            };
+
+            // Estructura adaptativa para sincronizar con tus preferencias de movilidad
+            if (userProfile === 'movilidad') {
+                bannerPreferencias.classList.add('movilidad-activa');
+                bannerIcon.innerHTML = icons.movilidad;
+                bannerTitle.textContent = "Movilidad Reducida";
+                if (userPace === 'camina') { factorVelocidad = 2.2; paceLabel = "Base Tranquilo"; }
+                else if (userPace === 'prisa') { factorVelocidad = 3.5; paceLabel = "Rápido"; }
+                else { factorVelocidad = 2.8; paceLabel = "Asistida / Silla"; }
+            } else {
+                bannerIcon.innerHTML = icons[userProfile] || icons.general;
+                if(userProfile === 'runner') {
+                    bannerTitle.textContent = "Perfil: Runner";
+                    factorVelocidad = 9.5; paceLabel = "Acondicionamiento / Trote";
+                } else if(userProfile === 'turista') {
+                    bannerTitle.textContent = "Perfil: Turista";
+                    factorVelocidad = 3.0; paceLabel = "Exploración";
+                } else {
+                    bannerTitle.textContent = "Uso General";
+                    factorVelocidad = userPace === 'prisa' ? 5.8 : 4.2;
+                    paceLabel = userPace === 'prisa' ? "Con Prisa" : "Caminando tranquilo";
+                }
+            }
+            
+            bannerDesc.textContent = `Ritmo: ${paceLabel} • ${userCompany === 'solo' ? 'Solo' : 'Acompañado'} • Masa: ${userWeight}kg`;
+
+            // Ejecución del cálculo optimizado de ruta
+            document.getElementById('btnCalcularRuta').addEventListener('click', () => {
+                const dest = document.getElementById('txtDestino').value.trim();
+                if(!dest) return alert("Por favor indica el destino.");
+
+                // Generación controlada de distancias para simulación real
+                const distancia = (Math.random() * (3.5 - 0.8) + 0.8).toFixed(2);
+                const tiempo = Math.round((distancia / factorVelocidad) * 60);
+                
+                let met = 3.2;
+                if(userProfile === 'movilidad') met = 3.8;
+                if(userProfile === 'runner') met = 6.5;
+
+                // Ecuación metabólica adaptada a la masa de carga configurada en el perfil
+                const calorias = Math.round(met * userWeight * (tiempo / 60));
+
+                document.getElementById('resDistancia').textContent = `${distancia} km`;
+                document.getElementById('resRitmo').textContent = paceLabel;
+                document.getElementById('resTiempo').textContent = `${tiempo} min`;
+                document.getElementById('resCalorias').textContent = `${calorias} kcal`;
+                document.getElementById('boxResults').style.display = 'flex';
+            });
+        });
+    </script>
+</body>
+</html>

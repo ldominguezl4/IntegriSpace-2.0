@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IntegriSpace 2.0 - Dashboard</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* --- RESET Y CONTROL DE ESPACIOS COMPACTOS --- */
+        .dashboard-layout, .dashboard-layout * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        .dashboard-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 14px; 
+            padding: 12px 6px 100px 6px; /* Altura perfecta sin desbordes */
+        }
+
+        /* --- ENCABEZADO: SALUDO DINÁMICO Y CAMPANA REGULADA --- */
+        .header-dashboard {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+        .welcome-text h2 {
+            font-size: 25px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+        .welcome-text p {
+            color: #94a3b8;
+            font-size: 13px;
+            margin-top: 1px;
+        }
+        
+        /* Botón de Notificaciones con buen tamaño circular */
+        .btn-notification-box {
+            background: rgba(30, 41, 59, 0.7);
+            border: none;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-notification-box:hover {
+            background: rgba(245, 158, 11, 0.15);
+        }
+        .btn-notification-box svg {
+            width: 24px;
+            height: 24px;
+            fill: #f59e0b;
+        }
+
+        /* --- SECCIONES Y MÉTRICAS DE HOY --- */
+        .section-title-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .section-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+        .current-date-badge {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .grid-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .metric-card {
+            background: rgba(30, 41, 59, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 14px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .metric-label {
+            color: #94a3b8;
+            font-size: 12px;
+        }
+        .metric-value {
+            font-size: 21px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+        .metric-value span {
+            font-size: 13px;
+            color: #64748b;
+            margin-left: 2px;
+        }
+        .text-orange { color: #f59e0b; }
+
+        /* --- SECCIÓN SEMANAL --- */
+        .weekly-container-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        .weekly-subcard {
+            background: rgba(30, 41, 59, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 12px 4px;
+            text-align: center;
+        }
+        .weekly-sublabel {
+            color: #94a3b8;
+            font-size: 11px;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .weekly-subvalue {
+            font-size: 16px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        /* --- ÚLTIMA RUTA EVALUADA --- */
+        .recent-route-card {
+            background: rgba(30, 41, 59, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 14px;
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .route-icon-box {
+            background: rgba(255, 255, 255, 0.06);
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .route-icon-box svg {
+            width: 22px;
+            height: 22px;
+        }
+        .route-info-box {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .route-timestamp {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+        .route-summary-meta {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+        .meta-highlight {
+            color: #f59e0b;
+        }
+
+        /* --- BOTÓN NUEVA RUTA INTEGRADO --- */
+        .btn-new-route {
+            background: linear-gradient(90deg, #6366f1, #a855f7);
+            color: #ffffff;
+            border: none;
+            border-radius: 14px;
+            padding: 15px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            margin-top: 5px;
+            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);
+            transition: transform 0.1s ease;
+        }
+        .btn-new-route:active {
+            transform: scale(0.98);
+        }
+
+        /* --- NAVBAR INFERIOR ACOPLADO (Sin cajas grises de fondo ni desbordes) --- */
+        .custom-bottom-nav {
+            position: absolute !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            background: #0c1428 !important; 
+            border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+            display: flex !important;
+            justify-content: space-around !important;
+            padding: 10px 0 14px 0 !important;
+            z-index: 9999 !important;
+            border-radius: 0 0 30px 30px; /* Sigue la curva física del teléfono */
+        }
+        .custom-nav-item {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            gap: 5px !important;
+            color: #55657e !important;
+            text-decoration: none !important;
+            font-size: 12px !important;
+            font-weight: 600 !important;
+            width: 65px !important;
+            background: none !important; 
+            border: none !important;     
+            outline: none !important;
+            padding: 0 !important;
+        }
+        .custom-nav-item.active {
+            color: #6366f1 !important;
+        }
+        .custom-nav-item svg {
+            width: 24px !important; 
+            height: 24px !important;
+            display: block !important;
+            background: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper-movil" style="position: relative; overflow: hidden;">
+        <div class="contenido-app">
+            <div class="dashboard-layout">
+                
+                <div class="header-dashboard">
+                    <div class="welcome-text">
+                        <h2 id="txtWelcome">¡Hola! </h2>
+                        <p>Este es tu resumen de actividad</p>
+                    </div>
+                    <button class="btn-notification-box" id="btnNotification">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1-1.5-1s-1.5.17-1.5 1v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="section-title-container">
+                    <span class="section-title">Resumen de hoy</span>
+                    <span class="current-date-badge" id="lblCurrentDate">--/--/----</span>
+                </div>
+
+                <div class="grid-metrics">
+                    <div class="metric-card">
+                        <span class="metric-label">Distancia recorrida</span>
+                        <div class="metric-value"><span id="lblTodayDist">0.00</span><span>km</span></div>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-label">Energía gastada</span>
+                        <div class="metric-value text-orange"><span id="lblTodayEnergy">0</span><span>J</span></div>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-label">Calorías</span>
+                        <div class="metric-value"><span id="lblTodayCalories">0</span><span>kcal</span></div>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-label">Nivel promedio</span>
+                        <div class="metric-value text-orange" id="lblTodayLevel">N/A</div>
+                    </div>
+                </div>
+
+                <div>
+                    <span class="section-title" style="display:block; margin-bottom:8px;">Esta semana</span>
+                    <div class="weekly-container-row">
+                        <div class="weekly-subcard">
+                            <span class="weekly-sublabel">Rutas realizadas</span>
+                            <span class="weekly-subvalue" id="lblWeekRoutes">0</span>
+                        </div>
+                        <div class="weekly-subcard">
+                            <span class="weekly-sublabel">Distancia total</span>
+                            <span class="weekly-subvalue" id="lblWeekDist">0.00 km</span>
+                        </div>
+                        <div class="weekly-subcard">
+                            <span class="weekly-sublabel">Energía total</span>
+                            <span class="weekly-subvalue" id="lblWeekEnergy">0 J</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <span class="section-title" style="display:block; margin-bottom:8px;">Última ruta</span>
+                    <div class="recent-route-card">
+                        <div class="route-icon-box">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5c.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5z" fill="#4f46e5"/>
+                                <path d="M15 19l-6-2.11V5l6 2.11V19z" fill="#818cf8"/>
+                            </svg>
+                        </div>
+                        <div class="route-info-box">
+                            <span class="route-timestamp" id="lblRecentRouteTime">Sin rutas registradas</span>
+                            <span class="route-summary-meta" id="lblRecentRouteMeta">Empieza a evaluar para ver datos</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-new-route" onclick="alert('Iniciando el módulo de tracking de ruta...')">
+                    <span>+</span> Nueva ruta
+                </button>
+
+            </div>
+        </div>
+
+        <nav class="custom-bottom-nav">
+            <a href="dashboard.html" class="custom-nav-item active">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3z" fill="#f97316"/>
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8h5z" fill="#22c55e"/>
+                </svg>
+                <span>Inicio</span>
+            </a>
+            <a href="historial.html" class="custom-nav-item">
+                <svg viewBox="0 0 24 24">
+                    <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6z" fill="#fef08a"/>
+                    <path d="M13 9V3.5L18.5 9H13z" fill="#ca8a04"/>
+                </svg>
+                <span>Historial</span>
+            </a>
+            <a href="evaluacion.html" class="custom-nav-item">
+                <svg viewBox="0 0 24 24">
+                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="#a855f7"/>
+                </svg>
+                <span>Ruta</span>
+            </a>
+            <a href="perfil.html" class="custom-nav-item">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="7" r="4" fill="#c084fc"/>
+                    <path d="M12 14c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="#a855f7"/>
+                </svg>
+                <span>Perfil</span>
+            </a>
+        </nav>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Actualizar Fecha del Teléfono automáticamente
+            const lblCurrentDate = document.getElementById('lblCurrentDate');
+            if (lblCurrentDate) {
+                const hoy = new Date();
+                lblCurrentDate.textContent = hoy.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' }).replace('.', '');
+            }
+
+            // Capturar la sesión activa para el saludo dinámico personalizado
+            const txtWelcome = document.getElementById('txtWelcome');
+            const usuarioActivo = localStorage.getItem('sesionActiva') || "Usuario Nuevo";
+            if (txtWelcome) {
+                txtWelcome.textContent = `¡Hola, ${usuarioActivo}! `;
+            }
+
+            // EVITA HARDCODEAR DATOS SI ES UNA CUENTA NUEVA (Limpieza estricta)
+            if (usuarioActivo !== "Idominguez" && usuarioActivo !== "admin") {
+                document.getElementById('lblTodayDist').textContent = "0.00";
+                document.getElementById('lblTodayEnergy').textContent = "0";
+                document.getElementById('lblTodayCalories').textContent = "0";
+                document.getElementById('lblTodayLevel').textContent = "N/A";
+                document.getElementById('lblWeekRoutes').textContent = "0";
+                document.getElementById('lblWeekDist').textContent = "0.00 km";
+                document.getElementById('lblWeekEnergy').textContent = "0 J";
+                document.getElementById('lblRecentRouteTime').textContent = "Sin rutas registradas";
+                document.getElementById('lblRecentRouteMeta').textContent = "Empieza a evaluar para ver datos";
+            } else {
+                // Cuenta Demo o de Pruebas (Idominguez / admin)
+                document.getElementById('lblTodayDist').textContent = "0.65";
+                document.getElementById('lblTodayEnergy').textContent = "780";
+                document.getElementById('lblTodayCalories').textContent = "186";
+                document.getElementById('lblTodayLevel').textContent = "Moderado";
+                document.getElementById('lblWeekRoutes').textContent = "30";
+                document.getElementById('lblWeekDist').textContent = "14.08 km";
+                document.getElementById('lblWeekEnergy').textContent = "17527 J";
+                document.getElementById('lblRecentRouteTime').textContent = "12-jun., 09:39 p. m.";
+                document.getElementById('lblRecentRouteMeta').innerHTML = '0.65 km · <span class="meta-highlight">Moderado</span>';
+            }
+
+            // Funcionalidad de Alerta para el botón de Notificaciones
+            const btnNotification = document.getElementById('btnNotification');
+            if (btnNotification) {
+                btnNotification.addEventListener('click', () => {
+                    alert("¡Todo en orden! No tienes alertas viales ni mensajes nuevos pendientes.");
+                });
+            }
+        });
+    </script>
+</body>
+</html>

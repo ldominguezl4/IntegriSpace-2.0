@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IntegriSpace 2.0 - Registro</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .register-layout {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+        }
+        .register-header {
+            width: 100%;
+            text-align: center;
+            margin-top: 10px;
+        }
+        .register-header h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        .register-header p {
+            color: var(--texto-gris);
+            font-size: 14px;
+        }
+        .form-container {
+            width: 100%;
+            margin-top: 20px;
+            flex: 1;
+        }
+        .login-input {
+            width: 100%;
+            background-color: var(--bg-tarjeta);
+            border: 1px solid var(--borde-tarjeta);
+            padding: 15px;
+            border-radius: 14px;
+            color: white;
+            font-size: 14px;
+            outline: none;
+            margin-bottom: 12px;
+        }
+        .login-input:focus {
+            border-color: #3b82f6;
+        }
+        .btn-register {
+            width: 100%;
+            background: var(--gradiente-morado);
+            border: none;
+            padding: 16px;
+            border-radius: 14px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+        .back-to-login {
+            color: var(--texto-gris);
+            font-size: 14px;
+            margin-top: 25px;
+            text-align: center;
+        }
+        .back-to-login a {
+            color: #6366f1;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .msg-error {
+            color: #ef4444;
+            font-size: 13px;
+            margin-bottom: 10px;
+            text-align: center;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper-movil">
+        <div class="contenido-app">
+            <div class="register-layout">
+                
+                <div class="register-header">
+                    <h2>Crear Cuenta</h2>
+                    <p>Regístrate para empezar a evaluar rutas</p>
+                </div>
+
+                <div class="form-container">
+                    <form id="registerForm">
+                        <div id="errorMsg" class="msg-error">Por favor, rellena todos los campos.</div>
+                        
+                        <input type="text" id="regNombre" class="login-input" placeholder="Nombre" required>
+                        <input type="text" id="regApellido" class="login-input" placeholder="Apellido" required>
+                        <input type="text" id="regUsername" class="login-input" placeholder="Nombre de usuario" required>
+                        <input type="email" id="regEmail" class="login-input" placeholder="Correo electrónico" required>
+                        <input type="password" id="regPassword" class="login-input" placeholder="Contraseña" required>
+                        
+                        <button type="submit" class="btn-register">Registrarse</button>
+                    </form>
+
+                    <p class="back-to-login">
+                        ¿Ya tienes cuenta? <a href="index.html">Inicia sesión</a>
+                    </p>
+                </div>
+
+                <img src="../assets/logo_ucv.png" alt="UCV" style="width: 65px; margin-top: 20px;">
+
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/script.js"></script>
+</body>
+</html>

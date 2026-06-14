@@ -1,0 +1,125 @@
+/* ==========================================================================
+   VARIABLES DE DISEÑO - INTEGRISPACE 2.0 (Calibración de Color Exacta)
+   ========================================================================== */
+:root {
+    --bg-principal: #10192d;     /* Azul noche exacto a tus maquetas */
+    --bg-tarjeta: #18253c;       /* Fondo de inputs y tarjetas contenedor */
+    --borde-tarjeta: #263756;    /* Bordes sutiles visibles */
+    --texto-blanco: #ffffff;
+    --texto-gris: #94a3b8;       /* Gris claro para legibilidad */
+    --accent-blue: #3b82f6;      
+    --gradiente-morado: linear-gradient(90deg, #6366f1, #3b82f6);
+}
+
+/* ==========================================================================
+   RESETEO Y CONFIGURACIÓN BASE
+   ========================================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+}
+
+body {
+    background-color: #0b0f19; 
+    color: var(--texto-blanco);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    transition: background-color 0.2s ease;
+}
+
+/* ==========================================================================
+   CONTENEDOR SMARTPHONE (WRAPPER EQUILIBRADO)
+   ========================================================================== */
+.wrapper-movil {
+    width: 100%;
+    max-width: 412px;
+    height: 844px;
+    background-color: var(--bg-principal);
+    border: 10px solid #1e293b;
+    border-radius: 44px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+}
+
+.contenido-app {
+    flex: 1;
+    overflow-y: auto;
+    padding: 30px 24px; /* Espaciado interno balanceado */
+    display: flex;
+    flex-direction: column;
+}
+
+.contenido-app::-webkit-scrollbar {
+    width: 0px;
+}
+
+/* ==========================================================================
+   COMPONENTES COMUNES (MENÚ INFERIOR)
+   ========================================================================== */
+.menu-inferior {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 75px;
+    background-color: #0d1321;
+    border-top: 1px solid var(--borde-tarjeta);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 100;
+}
+
+.menu-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: var(--texto-gris);
+    font-size: 11px;
+    transition: color 0.2s ease;
+}
+
+.menu-item.activo {
+    color: #6c5ce7;
+}
+
+/* ==========================================================================
+   MODOS DE ACCESIBILIDAD DINÁMICOS CORREGIDOS
+   ========================================================================== */
+
+/* Escala uniforme de fuentes para elementos clave al activar Texto Grande */
+body.large-text .brand-wrapper h1 { font-size: 42px; }
+body.large-text .brand-tagline { font-size: 16px; max-width: 320px; }
+body.large-text .login-input { font-size: 17px; padding: 18px; }
+body.large-text .btn-login { font-size: 18px; padding: 18px; }
+body.large-text .forgot-link, body.large-text .register-prompt { font-size: 16px; }
+body.large-text .acc-option { font-size: 16px; }
+
+/* Inversión total para el modo Alto Contraste */
+body.high-contrast {
+    --bg-principal: #000000;
+    --bg-tarjeta: #0c0c0c;
+    --borde-tarjeta: #ffffff;
+    --texto-gris: #ffffff;
+    --gradiente-morado: #5145cd;
+}
+
+body.high-contrast .login-input {
+    border: 2px solid #ffffff;
+}
+
+body.high-contrast .btn-accessibility {
+    background: #ffffff;
+}
+
+body.high-contrast .btn-accessibility img {
+    filter: invert(0) brightness(0);
+}

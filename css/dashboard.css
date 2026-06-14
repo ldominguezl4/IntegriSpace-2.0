@@ -1,0 +1,196 @@
+/* ==========================================================================
+   ESTILOS ESPECÍFICOS DEL DASHBOARD (INTEGRISPACE 2.0)
+   ========================================================================== */
+
+/* Cabecera del Dashboard */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.dashboard-header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.dashboard-header .subtitle {
+    color: var(--texto-gris);
+    font-size: 14px;
+}
+
+.btn-notification {
+    background: var(--bg-tarjeta);
+    border: 1px solid var(--borde-tarjeta);
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+/* Títulos de sección comunes */
+.section-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.date-badge {
+    font-size: 12px;
+    background: var(--borde-tarjeta);
+    padding: 4px 10px;
+    border-radius: 8px;
+    color: var(--texto-gris);
+    font-weight: 500;
+}
+
+/* Grid de métricas de hoy (2 columnas equilibradas) */
+.grid-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 22px;
+}
+
+.stat-card {
+    background-color: var(--bg-tarjeta);
+    border: 1px solid var(--borde-tarjeta);
+    padding: 16px;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 95px;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: var(--texto-gris);
+    font-weight: 500;
+}
+
+.stat-value {
+    font-size: 20px;
+    font-weight: 700;
+    margin-top: 6px;
+}
+
+.stat-value .unit {
+    font-size: 13px;
+    color: var(--texto-gris);
+    font-weight: 400;
+}
+
+/* Resaltado especial para la tarjeta de Julios de Energía (Estilo maqueta) */
+.highlight-energy .stat-value {
+    color: #ffb703; /* Tono amarillo/naranja de esfuerzo moderado */
+}
+
+.status-mod {
+    color: #ffb703;
+}
+
+/* Sección Fila Semanal */
+.weekly-section {
+    margin-bottom: 22px;
+}
+
+.weekly-row {
+    display: flex;
+    gap: 10px;
+}
+
+.weekly-card {
+    flex: 1;
+    background: var(--bg-tarjeta);
+    border: 1px solid var(--borde-tarjeta);
+    padding: 12px;
+    border-radius: 14px;
+    text-align: center;
+}
+
+.weekly-card span {
+    font-size: 11px;
+    color: var(--texto-gris);
+    display: block;
+    margin-bottom: 4px;
+}
+
+.weekly-card p {
+    font-size: 15px;
+    font-weight: 700;
+}
+
+/* Última Ruta */
+.last-route-section {
+    margin-bottom: 25px;
+}
+
+.route-simple-item {
+    background: var(--bg-tarjeta);
+    border: 1px solid var(--borde-tarjeta);
+    padding: 14px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.route-avatar-icon {
+    font-size: 24px;
+    background: #1e2d4a;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.route-details .route-timestamp {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.route-details .route-meta {
+    font-size: 12px;
+    color: var(--texto-gris);
+}
+
+/* Botón de Acción Inferior */
+.btn-primary-action {
+    width: 100%;
+    background: var(--gradiente-morado);
+    border: none;
+    padding: 16px;
+    border-radius: 16px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: auto; /* Empuja el botón al final del flujo si hay espacio */
+}
+
+.btn-primary-action:hover {
+    opacity: 0.95;
+}
+
+/* Ajustes de escala si se activa Texto Grande en el body */
+body.large-text .dashboard-header h1 { font-size: 28px; }
+body.large-text .stat-value { font-size: 24px; }
+body.large-text .btn-primary-action { font-size: 18px; }

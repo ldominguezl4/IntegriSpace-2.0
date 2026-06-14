@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IntegriSpace 2.0 - Login</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .login-layout {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+        }
+
+        /* Top Bar */
+        .login-top-bar {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            align-items: center;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        /* Botón de Accesibilidad */
+        .btn-accessibility {
+            background: #3b82f6; 
+            border: none;
+            width: 45px; 
+            height: 45px;
+            border-radius: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
+            transition: transform 0.2s;
+        }
+        .btn-accessibility:hover {
+            transform: scale(1.05);
+        }
+        .btn-accessibility img {
+            width: 24px;
+            height: 24px;
+            filter: invert(1) brightness(2);
+        }
+
+        /* Menú Desplegable Opciones */
+        .accessibility-menu {
+            display: none;
+            position: absolute;
+            top: 55px;
+            left: 0;
+            background: #1e2d4a;
+            border: 1px solid var(--borde-tarjeta);
+            border-radius: 14px;
+            padding: 6px;
+            z-index: 999;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+            width: 190px;
+        }
+        .accessibility-menu.show {
+            display: block;
+        }
+        .acc-option {
+            width: 100%;
+            background: none;
+            border: none;
+            color: var(--texto-blanco);
+            padding: 12px;
+            text-align: left;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .acc-option:hover {
+            background: #293b5e;
+        }
+
+        /* Selector Idiomas */
+        .lang-selector {
+            display: flex;
+            background: #18253c;
+            padding: 4px;
+            border-radius: 12px;
+            border: 1px solid var(--borde-tarjeta);
+        }
+        .btn-lang {
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--texto-gris);
+            cursor: pointer;
+            border-radius: 9px;
+            border: none;
+            background: none;
+        }
+        .btn-lang.active {
+            background: #3b82f6;
+            color: white;
+        }
+
+        /* Branding Sólido y Proporcional */
+        .brand-wrapper {
+            text-align: center;
+            margin: 10px 0;
+        }
+        .brand-logo {
+            width: 120px; 
+            height: auto;
+            margin-bottom: 12px;
+        }
+        .brand-wrapper h1 {
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        .brand-version {
+            color: #6366f1;
+            font-weight: bold;
+            font-size: 15px;
+            letter-spacing: 2px;
+            display: block;
+            margin-bottom: 12px;
+        }
+        .brand-tagline {
+            color: var(--texto-gris);
+            font-size: 14px;
+            max-width: 300px;
+            margin: 0 auto;
+            line-height: 1.4;
+        }
+
+        /* Formulario sin espacios excesivos */
+        .form-container {
+            width: 100%;
+            margin-top: 15px;
+        }
+        .login-input {
+            width: 100%;
+            background-color: var(--bg-tarjeta);
+            border: 1px solid var(--borde-tarjeta);
+            padding: 16px;
+            border-radius: 14px;
+            color: white;
+            font-size: 15px;
+            outline: none;
+            margin-bottom: 12px;
+        }
+        .login-input:focus {
+            border-color: #3b82f6;
+        }
+        .forgot-link {
+            display: block;
+            text-align: center;
+            color: #3b82f6;
+            font-size: 14px;
+            text-decoration: none;
+            margin: 8px 0 20px 0;
+            font-weight: 600;
+        }
+        .btn-login {
+            width: 100%;
+            background: var(--gradiente-morado);
+            border: none;
+            padding: 16px;
+            border-radius: 14px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .register-prompt {
+            color: var(--texto-gris);
+            font-size: 14px;
+            margin-top: 15px;
+        }
+        .register-prompt a {
+            color: #6366f1;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        /* Escudo Footer */
+        .footer-logo-ucv {
+            width: 70px; 
+            height: auto;
+            margin-top: 15px;
+            display: block;
+        }
+
+        /* Contenedor elegante de Alerta de Error */
+        .msg-error {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            font-size: 13px;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            text-align: center;
+            display: none; /* Controlado dinámicamente por JS */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper-movil">
+        <div class="contenido-app">
+            <div class="login-layout">
+                
+                <div class="login-top-bar">
+                    <button class="btn-accessibility" id="accessibilityBtn">
+                        <img src="../assets/icono_esfuerzo.png" alt="Accessibility">
+                    </button>
+                    
+                    <div class="accessibility-menu" id="accessibilityMenu">
+                        <button class="acc-option" id="optLargeText">🔍 <span data-en="Large Text" data-es="Texto Grande">Texto Grande</span></button>
+                        <button class="acc-option" id="optContrast">🌓 <span data-en="High Contrast" data-es="Alto Contraste">Alto Contraste</span></button>
+                    </div>
+
+                    <div class="lang-selector">
+                        <button class="btn-lang active" id="btnLangEs">ES</button>
+                        <button class="btn-lang" id="btnLangEn">EN</button>
+                    </div>
+                </div>
+
+                <div class="brand-wrapper">
+                    <img src="../assets/logo_integrispace.png" alt="IntegriSpace" class="brand-logo">
+                    <h1>IntegriSpace</h1>
+                    <span class="brand-version">2.0</span>
+                    <p class="brand-tagline" id="txtTagline" data-en="Smart mobility, urban accessibility and route evaluation." data-es="Plataforma inteligente de evaluación de movilidad y accesibilidad urbana.">Plataforma inteligente de evaluación de movilidad y accesibilidad urbana.</p>
+                </div>
+
+                <div class="form-container">
+                    <form id="loginForm">
+                        <div id="loginErrorMsg" class="msg-error">Usuario o contraseña incorrectos.</div>
+                        
+                        <input type="text" id="username" class="login-input" placeholder="Usuario o correo electrónico" data-placeholder-en="Username or email" data-placeholder-es="Usuario o correo electrónico" required>
+                        <input type="password" id="password" class="login-input" placeholder="Contraseña" data-placeholder-en="Password" data-placeholder-es="Contraseña" required>
+                        
+                        <a href="recuperar.html" class="forgot-link" id="txtForgot" data-en="Forgot your password?" data-es="¿Olvidaste tu contraseña?">¿Olvidaste tu contraseña?</a>
+                        
+                        <button type="submit" class="btn-login" id="txtSignIn" data-en="Sign in" data-es="Iniciar sesión">Iniciar sesión</button>
+                    </form>
+                </div>
+
+                <p class="register-prompt">
+                    <span id="txtRegisterPrompt" data-en="Don't have an account?" data-es="¿No tienes una cuenta?">¿No tienes una cuenta?</span> 
+                    <a href="registro.html" id="txtRegisterLink" data-en="Register" data-es="Regístrate">Regístrate</a>
+                </p>
+
+                <img src="../assets/logo_ucv.png" alt="UCV" class="footer-logo-ucv">
+
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/script.js"></script>
+</body>
+</html>
