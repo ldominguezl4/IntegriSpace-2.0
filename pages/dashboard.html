@@ -15,11 +15,11 @@
         .dashboard-layout {
             display: flex;
             flex-direction: column;
-            gap: 14px; 
-            padding: 12px 6px 100px 6px; /* Altura perfecta sin desbordes */
+            gap: 12px;
+            padding: 14px 10px 75px 10px;
         }
 
-        /* --- ENCABEZADO: SALUDO DINÁMICO Y CAMPANA REGULADA --- */
+        /* --- ENCABEZADO --- */
         .header-dashboard {
             display: flex;
             justify-content: space-between;
@@ -27,7 +27,7 @@
             width: 100%;
         }
         .welcome-text h2 {
-            font-size: 25px;
+            font-size: 24px;
             font-weight: 700;
             color: #ffffff;
         }
@@ -37,25 +37,20 @@
             margin-top: 1px;
         }
         
-        /* Botón de Notificaciones con buen tamaño circular */
         .btn-notification-box {
             background: rgba(30, 41, 59, 0.7);
             border: none;
-            width: 48px;
-            height: 48px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: background 0.2s;
-        }
-        .btn-notification-box:hover {
-            background: rgba(245, 158, 11, 0.15);
         }
         .btn-notification-box svg {
-            width: 24px;
-            height: 24px;
+            width: 22px;
+            height: 22px;
             fill: #f59e0b;
         }
 
@@ -64,9 +59,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 6px;
         }
         .section-title {
-            font-size: 17px;
+            font-size: 16px;
             font-weight: 700;
             color: #ffffff;
         }
@@ -78,23 +74,23 @@
         .grid-metrics {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
+            gap: 10px;
         }
         .metric-card {
             background: rgba(30, 41, 59, 0.45);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 14px;
-            padding: 14px;
+            border-radius: 12px;
+            padding: 12px;
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 4px;
         }
         .metric-label {
             color: #94a3b8;
             font-size: 12px;
         }
         .metric-value {
-            font-size: 21px;
+            font-size: 20px;
             font-weight: 700;
             color: #ffffff;
         }
@@ -109,13 +105,13 @@
         .weekly-container-row {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
+            gap: 8px;
         }
         .weekly-subcard {
             background: rgba(30, 41, 59, 0.45);
             border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 12px;
-            padding: 12px 4px;
+            padding: 10px 4px;
             text-align: center;
         }
         .weekly-sublabel {
@@ -124,8 +120,8 @@
             display: block;
             margin-bottom: 4px;
         }
-        .weekly-subvalue {
-            font-size: 16px;
+        .weekly-subcard .weekly-subvalue {
+            font-size: 14px;
             font-weight: 700;
             color: #ffffff;
         }
@@ -134,32 +130,31 @@
         .recent-route-card {
             background: rgba(30, 41, 59, 0.45);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 14px;
-            padding: 14px;
+            border-radius: 12px;
+            padding: 12px;
             display: flex;
             align-items: center;
             gap: 12px;
         }
         .route-icon-box {
             background: rgba(255, 255, 255, 0.06);
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
         .route-icon-box svg {
-            width: 22px;
-            height: 22px;
+            width: 20px;
+            height: 20px;
         }
         .route-info-box {
             display: flex;
             flex-direction: column;
-            gap: 2px;
         }
         .route-timestamp {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             color: #ffffff;
         }
@@ -171,67 +166,35 @@
             color: #f59e0b;
         }
 
-        /* --- BOTÓN NUEVA RUTA INTEGRADO --- */
-        .btn-new-route {
-            background: linear-gradient(90deg, #6366f1, #a855f7);
-            color: #ffffff;
-            border: none;
-            border-radius: 14px;
-            padding: 15px;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
+        /* --- TARJETA DE RECOMENDACIONES --- */
+        .recommendation-card {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(168, 85, 247, 0.15));
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            border-radius: 12px;
+            padding: 12px;
             display: flex;
+            gap: 10px;
             align-items: center;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
-            margin-top: 5px;
-            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);
-            transition: transform 0.1s ease;
         }
-        .btn-new-route:active {
-            transform: scale(0.98);
-        }
+        .recommendation-icon { font-size: 22px; }
+        .recommendation-text-box { display: flex; flex-direction: column; gap: 2px; }
+        .recommendation-title { font-size: 13px; font-weight: 700; color: #c084fc; }
+        .recommendation-desc { font-size: 12px; color: #cbd5e1; line-height: 1.4; }
 
-        /* --- NAVBAR INFERIOR ACOPLADO (Sin cajas grises de fondo ni desbordes) --- */
+        /* --- NAVBAR INFERIOR ACOPLADO --- */
         .custom-bottom-nav {
-            position: absolute !important;
-            bottom: 0 !important;
-            left: 0 !important;
-            width: 100% !important;
-            background: #0c1428 !important; 
-            border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
-            display: flex !important;
-            justify-content: space-around !important;
-            padding: 10px 0 14px 0 !important;
-            z-index: 9999 !important;
-            border-radius: 0 0 30px 30px; /* Sigue la curva física del teléfono */
+            position: absolute !important; bottom: 0 !important; left: 0 !important; width: 100% !important;
+            background: #0c1428 !important; border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+            display: flex !important; justify-content: space-around !important; padding: 10px 0 14px 0 !important;
+            z-index: 9999 !important; border-radius: 0 0 30px 30px; 
         }
         .custom-nav-item {
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: center !important;
-            gap: 5px !important;
-            color: #55657e !important;
-            text-decoration: none !important;
-            font-size: 12px !important;
-            font-weight: 600 !important;
-            width: 65px !important;
-            background: none !important; 
-            border: none !important;     
-            outline: none !important;
-            padding: 0 !important;
+            display: flex !important; flex-direction: column !important; align-items: center !important; gap: 5px !important;
+            color: #55657e !important; text-decoration: none !important; font-size: 12px !important; font-weight: 600 !important;
+            width: 65px !important; background: none !important; border: none !important; outline: none !important; padding: 0 !important;
         }
-        .custom-nav-item.active {
-            color: #6366f1 !important;
-        }
-        .custom-nav-item svg {
-            width: 24px !important; 
-            height: 24px !important;
-            display: block !important;
-            background: none !important;
-        }
+        .custom-nav-item.active { color: #6366f1 !important; }
+        .custom-nav-item svg { width: 24px !important; height: 24px !important; display: block !important; background: none !important; }
     </style>
 </head>
 <body>
@@ -242,7 +205,7 @@
                 
                 <div class="header-dashboard">
                     <div class="welcome-text">
-                        <h2 id="txtWelcome">¡Hola! </h2>
+                        <h2 id="txtWelcome">¡Hola!</h2>
                         <p>Este es tu resumen de actividad</p>
                     </div>
                     <button class="btn-notification-box" id="btnNotification">
@@ -252,35 +215,36 @@
                     </button>
                 </div>
 
-                <div class="section-title-container">
-                    <span class="section-title">Resumen de hoy</span>
-                    <span class="current-date-badge" id="lblCurrentDate">--/--/----</span>
-                </div>
-
-                <div class="grid-metrics">
-                    <div class="metric-card">
-                        <span class="metric-label">Distancia recorrida</span>
-                        <div class="metric-value"><span id="lblTodayDist">0.00</span><span>km</span></div>
+                <div>
+                    <div class="section-title-container">
+                        <span class="section-title">Última ruta</span>
+                        <span class="current-date-badge" id="lblCurrentDate">--/--/----</span>
                     </div>
-                    <div class="metric-card">
-                        <span class="metric-label">Energía gastada</span>
-                        <div class="metric-value text-orange"><span id="lblTodayEnergy">0</span><span>J</span></div>
-                    </div>
-                    <div class="metric-card">
-                        <span class="metric-label">Calorías</span>
-                        <div class="metric-value"><span id="lblTodayCalories">0</span><span>kcal</span></div>
-                    </div>
-                    <div class="metric-card">
-                        <span class="metric-label">Nivel promedio</span>
-                        <div class="metric-value text-orange" id="lblTodayLevel">N/A</div>
+                    <div class="grid-metrics">
+                        <div class="metric-card">
+                            <span class="metric-label">Distancia recorrida</span>
+                            <div class="metric-value"><span id="lblTodayDist">0</span><span>m</span></div>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-label">Energía gastada</span>
+                            <div class="metric-value text-orange"><span id="lblTodayEnergy">0</span><span>J</span></div>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-label">Calorías</span>
+                            <div class="metric-value"><span id="lblTodayCalories">0</span><span>kcal</span></div>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-label">Nivel de esfuerzo</span>
+                            <div class="metric-value text-orange" id="lblTodayLevel">N/A</div>
+                        </div>
                     </div>
                 </div>
 
                 <div>
-                    <span class="section-title" style="display:block; margin-bottom:8px;">Esta semana</span>
+                    <span class="section-title" style="display:block; margin-bottom:6px;">Histórico acumulado</span>
                     <div class="weekly-container-row">
                         <div class="weekly-subcard">
-                            <span class="weekly-sublabel">Rutas realizadas</span>
+                            <span class="weekly-sublabel">Rutas totales</span>
                             <span class="weekly-subvalue" id="lblWeekRoutes">0</span>
                         </div>
                         <div class="weekly-subcard">
@@ -295,7 +259,7 @@
                 </div>
 
                 <div>
-                    <span class="section-title" style="display:block; margin-bottom:8px;">Última ruta</span>
+                    <span class="section-title" style="display:block; margin-bottom:6px;">Monitoreo rápido</span>
                     <div class="recent-route-card">
                         <div class="route-icon-box">
                             <svg viewBox="0 0 24 24">
@@ -310,9 +274,16 @@
                     </div>
                 </div>
 
-                <button class="btn-new-route" onclick="alert('Iniciando el módulo de tracking de ruta...')">
-                    <span>+</span> Nueva ruta
-                </button>
+                <div>
+                    <span class="section-title" style="display:block; margin-bottom:6px;">Tip del día 💡</span>
+                    <div class="recommendation-card">
+                        <div class="recommendation-icon" id="tipIcon">🥤</div>
+                        <div class="recommendation-text-box">
+                            <span class="recommendation-title" id="tipTitle">¡Mantente hidratado!</span>
+                            <p class="recommendation-desc" id="tipDesc">Recuerda tomar entre 250ml y 500ml de agua antes de iniciar cualquier ruta para evitar fatigas.</p>
+                        </div>
+                    </div>
+                </div>
 
             </div>
         </div>
@@ -332,7 +303,7 @@
                 </svg>
                 <span>Historial</span>
             </a>
-            <a href="evaluacion.html" class="custom-nav-item">
+            <a href="ruta.html" class="custom-nav-item">
                 <svg viewBox="0 0 24 24">
                     <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="#a855f7"/>
                 </svg>
@@ -350,23 +321,61 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Actualizar Fecha del Teléfono automáticamente
+            // 1. Mostrar fecha actual
             const lblCurrentDate = document.getElementById('lblCurrentDate');
             if (lblCurrentDate) {
                 const hoy = new Date();
                 lblCurrentDate.textContent = hoy.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' }).replace('.', '');
             }
 
-            // Capturar la sesión activa para el saludo dinámico personalizado
+            // 2. Personalización de bienvenida
             const txtWelcome = document.getElementById('txtWelcome');
-            const usuarioActivo = localStorage.getItem('sesionActiva') || "Usuario Nuevo";
-            if (txtWelcome) {
-                txtWelcome.textContent = `¡Hola, ${usuarioActivo}! `;
-            }
+            const usuarioActivo = localStorage.getItem('sesionActiva') || "Usuario";
+            if (txtWelcome) { txtWelcome.textContent = `¡Hola, ${usuarioActivo}!`; }
 
-            // EVITA HARDCODEAR DATOS SI ES UNA CUENTA NUEVA (Limpieza estricta)
-            if (usuarioActivo !== "Idominguez" && usuarioActivo !== "admin") {
-                document.getElementById('lblTodayDist').textContent = "0.00";
+            // 3. Sincronización Real con la Base de Datos 'integriRutas'
+            const historialRutas = JSON.parse(localStorage.getItem('integriRutas')) || [];
+
+            if (historialRutas.length > 0) {
+                // Al usar array.push(), la ruta más nueva calculada está al final del array
+                const ultimaRuta = historialRutas[historialRutas.length - 1];
+                
+                // Función extractora: limpia texto ('m', 'J', 'kcal') y elimina puntos viales de millar ("19.640" -> 19640)
+                const extraerNumeroPuro = (valor) => {
+                    if (!valor) return 0;
+                    const limpio = valor.toString().replace(/[^\d]/g, '');
+                    return parseInt(limpio, 10) || 0;
+                };
+
+                // A) Sincronizar Tarjetas Superiores (Último cálculo registrado)
+                document.getElementById('lblTodayDist').textContent = extraerNumeroPuro(ultimaRuta.distancia || ultimaRuta.distanciaStr);
+                document.getElementById('lblTodayEnergy').textContent = extraerNumeroPuro(ultimaRuta.energia || ultimaRuta.energiaStr).toLocaleString('es-ES');
+                document.getElementById('lblTodayCalories').textContent = extraerNumeroPuro(ultimaRuta.calorias);
+                document.getElementById('lblTodayLevel').textContent = ultimaRuta.esfuerzo || "BAJO";
+
+                // B) Monitoreo Rápido Intermedio
+                document.getElementById('lblRecentRouteTime').textContent = `${ultimaRuta.fecha || 'Hoy'} · ${ultimaRuta.hora || ''}`;
+                document.getElementById('lblRecentRouteMeta').innerHTML = `${ultimaRuta.distancia || ultimaRuta.distanciaStr || '0 m'} · <span class="meta-highlight">${ultimaRuta.terreno || 'Plano'}</span> (${ultimaRuta.tiempo || '0 min'})`;
+
+                // C) Bucle de Matemáticas para Histórico Acumulado Completo
+                let metrosTotales = 0;
+                let energiaTotales = 0;
+
+                historialRutas.forEach(ruta => {
+                    metrosTotales += extraerNumeroPuro(ruta.distancia || ruta.distanciaStr);
+                    energiaTotales += extraerNumeroPuro(ruta.energia || ruta.energiaStr);
+                });
+
+                // Conversión estética a Kilómetros
+                const kilometrosTotales = (metrosTotales / 1000).toFixed(2);
+
+                document.getElementById('lblWeekRoutes').textContent = historialRutas.length;
+                document.getElementById('lblWeekDist').textContent = kilometrosTotales + " km";
+                document.getElementById('lblWeekEnergy').textContent = energiaTotales.toLocaleString('es-ES') + " J";
+
+            } else {
+                // Reset a ceros si borran la base de datos por completo
+                document.getElementById('lblTodayDist').textContent = "0";
                 document.getElementById('lblTodayEnergy').textContent = "0";
                 document.getElementById('lblTodayCalories').textContent = "0";
                 document.getElementById('lblTodayLevel').textContent = "N/A";
@@ -375,20 +384,21 @@
                 document.getElementById('lblWeekEnergy').textContent = "0 J";
                 document.getElementById('lblRecentRouteTime').textContent = "Sin rutas registradas";
                 document.getElementById('lblRecentRouteMeta').textContent = "Empieza a evaluar para ver datos";
-            } else {
-                // Cuenta Demo o de Pruebas (Idominguez / admin)
-                document.getElementById('lblTodayDist').textContent = "0.65";
-                document.getElementById('lblTodayEnergy').textContent = "780";
-                document.getElementById('lblTodayCalories').textContent = "186";
-                document.getElementById('lblTodayLevel').textContent = "Moderado";
-                document.getElementById('lblWeekRoutes').textContent = "30";
-                document.getElementById('lblWeekDist').textContent = "14.08 km";
-                document.getElementById('lblWeekEnergy').textContent = "17527 J";
-                document.getElementById('lblRecentRouteTime').textContent = "12-jun., 09:39 p. m.";
-                document.getElementById('lblRecentRouteMeta').innerHTML = '0.65 km · <span class="meta-highlight">Moderado</span>';
             }
 
-            // Funcionalidad de Alerta para el botón de Notificaciones
+            // 4. Tips Aleatorios
+            const tips = [
+                { icon: "🥤", title: "Hidratación inteligente", desc: "Toma de 250ml a 500ml de agua antes de iniciar tu ruta para mantener el rendimiento al máximo." },
+                { icon: "🍌", title: "Energía rápida", desc: "Un plátano o un puñado de frutos secos 30 minutos antes de salir son el combustible ideal para tu cuerpo." },
+                { icon: "🥗", title: "Recuperación muscular", desc: "Después de un gran esfuerzo, prioriza alimentos ricos en proteínas y carbohidratos limpios." },
+                { icon: "🧘", title: "Evita lesiones", desc: "Dedica al menos 3 minutos a estirar las piernas al finalizar tu recorrido. Tus músculos te lo agradecerán." }
+            ];
+            const randomTip = tips[Math.floor(Math.random() * tips.length)];
+            document.getElementById('tipIcon').textContent = randomTip.icon;
+            document.getElementById('tipTitle').textContent = randomTip.title;
+            document.getElementById('tipDesc').textContent = randomTip.desc;
+
+            // Alerta simulada de notificaciones
             const btnNotification = document.getElementById('btnNotification');
             if (btnNotification) {
                 btnNotification.addEventListener('click', () => {

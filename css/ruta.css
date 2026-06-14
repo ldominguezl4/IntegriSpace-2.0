@@ -1,0 +1,269 @@
+/* ==========================================================================
+   ruta.css - Estilos Exclusivos para la Pantalla de Mapa y Configuración
+   ========================================================================== */
+
+/* 1. CONTENCIÓN CRÍTICA: Enjaula el mapa dentro del teléfono */
+.contenedor-movil-app {
+    position: relative;
+    width: 375px;
+    height: 812px;
+    background-color: #0b121f;
+    border-radius: 32px;
+    overflow: hidden !important; /* Corta drásticamente cualquier desborde del mapa */
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+}
+
+/* 2. CAPA DEL MAPA (Ocupa el fondo real del dispositivo) */
+#map {
+    width: 100% !important;
+    height: calc(100% - 65px) !important; /* Descuenta exactamente el espacio de la nav-bar-inferior */
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+/* Filtro nocturno calibrado para OpenStreetMap */
+.leaflet-tile-container {
+    filter: invert(100%) hue-rotate(180deg) brightness(90%) contrast(115%) !important;
+}
+
+/* Ocultar elementos innecesarios de Leaflet que ensucian la interfaz móvil */
+.leaflet-control-zoom,
+.leaflet-control-attribution {
+    display: none !important;
+}
+
+/* 3. INTERFAZ FLOTANTE SUPERIOR (Header) */
+.header-app {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px 16px;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(to bottom, #0b121f 50%, rgba(11, 18, 31, 0));
+    z-index: 10;
+    pointer-events: none; /* Permite clickear el mapa a través del degradado */
+}
+
+.btn-volver {
+    width: 32px;
+    height: 32px;
+    background: #141d30;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    text-decoration: none;
+    pointer-events: auto; /* Reactiva los clicks solo en el botón */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.btn-volver svg {
+    width: 14px;
+    height: 14px;
+    fill: #ffffff;
+}
+
+.header-app h1 {
+    color: #ffffff;
+    font-size: 17px;
+    font-weight: 600;
+    margin: 0 auto;
+    transform: translateX(-16px);
+}
+
+/* 4. CONTROLES FLOTANTES LATERALES (GPS y Limpiar) */
+.controles-flotantes-mapa {
+    position: absolute;
+    top: 85px;
+    right: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 10;
+}
+
+.btn-fab-control {
+    width: 38px;
+    height: 38px;
+    background: #141d30;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.35);
+    outline: none;
+}
+
+.btn-fab-control:active {
+    transform: scale(0.95);
+}
+
+/* 5. COMPONENTE DESPLEGABLE (Panel de Configuración de Ruta) */
+.panel-informacion-ruta {
+    position: absolute;
+    bottom: 80px; /* Posicionado milimétricamente arriba de tu nav-bar de 65px */
+    left: 14px;
+    right: 14px;
+    background: #141d30;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 20px;
+    z-index: 15;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Cabecera del Panel */
+.panel-cuerpo {
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.panel-cuerpo span {
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.panel-cuerpo .medidor-distancia {
+    color: #bf5af2;
+    font-size: 13px;
+    font-weight: 700;
+    background: rgba(191, 90, 242, 0.1);
+    padding: 4px 10px;
+    border-radius: 8px;
+}
+
+/* Formulario Oculto dentro del Acordeón */
+.formulario-desplegable {
+    max-height: 0;
+    padding: 0 16px;
+    opacity: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: all 0.3s ease;
+}
+
+/* Clases de estado activo controladas por JavaScript */
+.panel-informacion-ruta.abierto {
+    bottom: 75px;
+}
+
+.panel-informacion-ruta.abierto .formulario-desplegable {
+    max-height: 380px;
+    padding-bottom: 16px;
+    opacity: 1;
+}
+
+/* Inputs y Selects integrados al estilo oscuro */
+.campo-config {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.campo-config label {
+    color: #a0aec0;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.campo-config input, 
+.campo-config select {
+    background: #0b121f;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    padding: 10px 12px;
+    color: #ffffff;
+    font-size: 13px;
+    outline: none;
+}
+
+.campo-config input[readonly] {
+    color: #bf5af2;
+    font-weight: 600;
+}
+
+/* Botón Morado de Evaluación */
+.btn-evaluar-ruta {
+    width: 100%;
+    background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
+    color: #ffffff;
+    border: none;
+    padding: 12px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+    margin-top: 6px;
+}
+
+/* 6. BARRA DE NAVEGACIÓN INFERIOR */
+.nav-bar-inferior {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 65px;
+    background: #0b121f;
+    border-top: 1px solid rgba(255, 255, 255, 0.03);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 20;
+    padding-bottom: 4px;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    color: #4a5568;
+    text-decoration: none;
+    font-size: 10px;
+    font-weight: 500;
+    width: 65px;
+}
+
+.nav-item.activo {
+    color: #bf5af2;
+}
+
+.nav-item svg {
+    width: 19px;
+    height: 19px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* Popups nativos de Leaflet adaptados */
+.leaflet-popup-content-wrapper {
+    background: #141d30 !important;
+    color: #ffffff !important;
+    border-radius: 8px;
+    font-size: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.leaflet-popup-tip {
+    background: #141d30 !important;
+}

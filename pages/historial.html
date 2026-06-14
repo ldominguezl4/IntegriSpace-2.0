@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IntegriSpace 2.0 - Historial</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* --- RESETEO ESTRUCTURAL ANTI-DESPLAZAMIENTO DEL MARCO --- */
+        .historial-main-layout {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 24px 16px 90px 16px;
+        }
+
+        /* --- CABECERA ORIGINAL --- */
+        .historial-header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .historial-header-top h1 {
+            font-size: 26px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .btn-borrar-todo {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-borrar-todo:hover {
+            background: rgba(239, 68, 68, 0.25);
+        }
+
+        /* --- FILTROS EN BURBUJAS --- */
+        .filtros-historial-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 24px;
+            width: 100%;
+        }
+
+        .filtro-bubble {
+            flex: 1;
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            color: #94a3b8;
+            padding: 10px 0;
+            text-align: center;
+            border-radius: 14px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .filtro-bubble.active {
+            background: #6366f1;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        /* --- CONTENEDOR DE SCROLL EXCLUSIVO --- */
+        .historial-cards-scrollable-zone {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            width: 100%;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .historial-cards-scrollable-zone::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
+        }
+
+        /* --- TARJETAS COMPACTAS --- */
+        .rutas-historial-card {
+            background: rgba(22, 32, 51, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 20px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .ruta-card-top-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ruta-card-title-block h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 2px;
+        }
+
+        .ruta-card-title-block span {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .esfuerzo-pill-badge {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .pill-bajo { background: rgba(34, 197, 94, 0.15); color: #22c55e; }
+        .pill-leve { background: rgba(234, 179, 8, 0.15); color: #eab308; }
+
+        /* --- FILA DE MÉTRICAS HORIZONTALES SECUNDARIAS --- */
+        .ruta-card-metrics-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 12px;
+        }
+
+        .metric-sub-box {
+            text-align: center;
+            flex: 1;
+        }
+
+        .metric-sub-box p {
+            color: #475569;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 2px;
+            text-transform: uppercase;
+        }
+
+        .metric-sub-box span {
+            color: #94a3b8;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        /* --- MENÚ INFERIOR UNIFICADO --- */
+        .custom-bottom-nav {
+            position: absolute !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            background: #0c1428 !important; 
+            border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+            display: flex !important;
+            justify-content: space-around !important;
+            padding: 10px 0 14px 0 !important;
+            z-index: 9999 !important;
+            border-radius: 0 0 30px 30px;
+        }
+        .custom-nav-item {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            gap: 5px !important;
+            color: #55657e !important;
+            text-decoration: none !important;
+            font-size: 12px !important;
+            font-weight: 600 !important;
+            width: 65px !important;
+            background: none !important; 
+            border: none !important;     
+            padding: 0 !important;
+        }
+        .custom-nav-item.active { color: #6366f1 !important; }
+        .custom-nav-item svg { width: 24px !important; height: 24px !important; display: block !important; }
+
+        /* --- MODAL OSCURO --- */
+        .custom-modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(4px);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 10000;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+        .custom-modal-overlay.active {
+            opacity: 1; pointer-events: auto;
+        }
+        .custom-modal-card {
+            background: #1e293b;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 24px;
+            width: 90%;
+            max-width: 340px;
+            text-align: center;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            transform: scale(0.9);
+            transition: transform 0.2s ease;
+        }
+        .custom-modal-overlay.active .custom-modal-card {
+            transform: scale(1);
+        }
+        .custom-modal-title {
+            color: #ffffff; font-size: 18px; font-weight: 700; margin-bottom: 8px;
+        }
+        .custom-modal-text {
+            color: #94a3b8; font-size: 14px; line-height: 1.5; margin-bottom: 20px;
+        }
+        .custom-modal-actions {
+            display: flex; gap: 10px; justify-content: center;
+        }
+        .btn-modal {
+            padding: 10px 16px; border-radius: 8px; font-size: 14px; font-weight: 600;
+            cursor: pointer; border: none; flex: 1; transition: background 0.2s;
+        }
+        .btn-modal-cancel { background: #334155; color: #cbd5e1; }
+        .btn-modal-cancel:hover { background: #475569; }
+        .btn-modal-confirm { background: #ef4444; color: #ffffff; }
+        .btn-modal-confirm:hover { background: #dc2626; }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper-movil" style="position: relative; overflow: hidden;">
+        <div class="contenido-app" style="height: 100%;">
+            
+            <div class="historial-main-layout">
+                
+                <div class="historial-header-top">
+                    <h1>Tu Historial</h1>
+                    <button class="btn-borrar-todo" id="btnClearHistory">Borrar todo</button>
+                </div>
+
+                <div class="filtros-historial-row">
+                    <div class="filtro-bubble active">Todas</div>
+                    <div class="filtro-bubble">Esta semana</div>
+                    <div class="filtro-bubble">Este mes</div>
+                </div>
+
+                <div class="historial-cards-scrollable-zone" id="contenedorDeTarjetas">
+                </div>
+
+            </div>
+
+        </div>
+
+        <nav class="custom-bottom-nav">
+            <a href="dashboard.html" class="custom-nav-item">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3z" fill="#f97316"/>
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8h5z" fill="#22c55e"/>
+                </svg>
+                <span>Inicio</span>
+            </a>
+            <a href="historial.html" class="custom-nav-item active">
+                <svg viewBox="0 0 24 24">
+                    <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6z" fill="#fef08a"/>
+                    <path d="M13 9V3.5L18.5 9H13z" fill="#ca8a04"/>
+                </svg>
+                <span>Historial</span>
+            </a>
+            <a href="ruta.html" class="custom-nav-item">
+                <svg viewBox="0 0 24 24">
+                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="#a855f7"/>
+                </svg>
+                <span>Ruta</span>
+            </a>
+            <a href="perfil.html" class="custom-nav-item">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="7" r="4" fill="#c084fc"/>
+                    <path d="M12 14c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="#a855f7"/>
+                </svg>
+                <span>Perfil</span>
+            </a>
+        </nav>
+    </div>
+
+    <div id="deleteModal" class="custom-modal-overlay">
+        <div class="custom-modal-card">
+            <div class="custom-modal-title">¿Borrar historial?</div>
+            <p class="custom-modal-text">Esta acción eliminará de forma permanente todas tus rutas guardadas de vectores. No podrás recuperarlas.</p>
+            <div class="custom-modal-actions">
+                <button id="btnCancelDelete" class="btn-modal btn-modal-cancel">Cancelar</button>
+                <button id="btnConfirmDelete" class="btn-modal btn-modal-confirm">Eliminar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const contenedorDeTarjetas = document.getElementById('contenedorDeTarjetas');
+            const deleteModal = document.getElementById('deleteModal');
+            const btnCancelDelete = document.getElementById('btnCancelDelete');
+            const btnConfirmDelete = document.getElementById('btnConfirmDelete');
+            
+            function cargarHistorialDesdeBaseDeDatos() {
+                // Obtener datos puros sin respaldos falsos creados manualmente
+                const historialRutas = JSON.parse(localStorage.getItem('integriRutas')) || [];
+
+                if (historialRutas.length === 0) {
+                    contenedorDeTarjetas.innerHTML = `
+                        <div style="text-align:center; padding:40px; color:#475569; font-size:14px;">
+                            <p>No hay rutas registradas en tu historial.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Pintar de las más nuevas a las más viejas (.reverse())
+                contenedorDeTarjetas.innerHTML = [...historialRutas].reverse().map(ruta => {
+                    const esfrz = (ruta.esfuerzo || "BAJO").toUpperCase();
+                    const badgeClass = esfrz === 'LEVE' ? 'pill-leve' : 'pill-bajo';
+
+                    return `
+                        <div class="rutas-historial-card">
+                            <div class="ruta-card-top-info">
+                                <div class="ruta-card-title-block">
+                                    <h2>${ruta.distancia || '0 m'}</h2>
+                                    <span>${ruta.fecha || 'Hoy'} • ${ruta.hora || '00:00'}</span>
+                                </div>
+                                <span class="esfuerzo-pill-badge ${badgeClass}">${esfrz}</span>
+                            </div>
+
+                            <div class="ruta-card-metrics-row">
+                                <div class="metric-sub-box">
+                                    <p>Calorías</p>
+                                    <span>${ruta.calorias || '0 kcal'}</span>
+                                </div>
+                                <div class="metric-sub-box">
+                                    <p>Energía</p>
+                                    <span>${ruta.energia || '0 J'}</span>
+                                </div>
+                                <div class="metric-sub-box">
+                                    <p>Tiempo</p>
+                                    <span>${ruta.tiempo || '0 min'}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // Oír si se agrega una ruta en caliente desde la otra pestaña
+            window.addEventListener('storage', (e) => {
+                if (e.key === 'integriRutas') {
+                    cargarHistorialDesdeBaseDeDatos();
+                }
+            });
+
+            // Eventos del Modal
+            document.getElementById('btnClearHistory').addEventListener('click', (e) => {
+                e.preventDefault();
+                deleteModal.classList.add('active');
+            });
+
+            btnCancelDelete.addEventListener('click', () => {
+                deleteModal.classList.remove('active');
+            });
+
+            btnConfirmDelete.addEventListener('click', () => {
+                localStorage.removeItem('integriRutas');
+                deleteModal.classList.remove('active');
+                cargarHistorialDesdeBaseDeDatos();
+            });
+
+            deleteModal.addEventListener('click', (e) => {
+                if (e.target === deleteModal) deleteModal.classList.remove('active');
+            });
+
+            // Carga inicial
+            cargarHistorialDesdeBaseDeDatos();
+        });
+    </script>
+</body>
+</html>

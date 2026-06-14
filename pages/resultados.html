@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <title>IntegriSpace 2.0 - Resultados</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        body {
+            background: #020617;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            /* Fuerza al cuerpo de la página a respetar una escala de visualización fija */
+            transform-origin: center center;
+        }
+        /* Contenedor móvil con aislamiento total de tamaño (size containment) */
+        .wrapper-movil {
+            position: relative;
+            width: 412px;
+            max-width: 412px;
+            height: 846px;
+            max-height: 846px;
+            border-radius: 40px;
+            background: #0f172a;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.85);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            contain: strict; /* Bloquea dimensiones de forma agresiva a nivel de layout, paint y size */
+        }
+        .header-analisis {
+            padding: 24px 16px;
+            display: flex;
+            align-items: center;
+            background: #0f172a;
+            flex-shrink: 0;
+        }
+        .back-btn {
+            width: 38px;
+            height: 38px;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .header-analisis h2 {
+            flex: 1;
+            text-align: center;
+            font-size: 22px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-right: 38px;
+        }
+        .content-scroll {
+            flex: 1;
+            padding: 0 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
+        }
+        .gauge-card {
+            background: #1e293b;
+            border-radius: 24px;
+            padding: 24px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+        .gauge-label {
+            color: #94a3b8;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        .gauge-status {
+            font-size: 28px;
+            font-weight: 800;
+            color: #22c55e;
+            margin-bottom: 16px;
+        }
+        .gauge-visual-container {
+            position: relative;
+            width: 200px;
+            height: 100px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+        .gauge-arc-bg {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 18px solid #334155;
+            box-sizing: border-box;
+        }
+        .gauge-arc-fill {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 18px solid #22c55e;
+            box-sizing: border-box;
+            clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
+            transform: rotate(0deg);
+        }
+        .gauge-icon {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            color: #ffffff;
+        }
+        .grid-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+        .metric-box {
+            background: #1e293b;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            padding: 18px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+        .metric-title {
+            color: #94a3b8;
+            font-size: 13px;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        .metric-num {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+        .btn-save-route {
+            width: 100%;
+            background: #22c55e;
+            color: #ffffff;
+            border: none;
+            border-radius: 16px;
+            padding: 18px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(34, 197, 94, 0.3);
+            margin-top: 10px;
+            margin-bottom: 30px;
+            transition: background 0.2s;
+            flex-shrink: 0;
+        }
+        .btn-save-route:hover {
+            background: #16a34a;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper-movil">
+        <div class="header-analisis">
+            <a href="ruta.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
+            <h2>Resultados</h2>
+        </div>
+
+        <div class="content-scroll">
+            <div class="gauge-card">
+                <p class="gauge-label">Nivel de Esfuerzo</p>
+                <div class="gauge-status" id="txt-esfuerzo">Bajo</div>
+                <div class="gauge-visual-container">
+                    <div class="gauge-arc-bg"></div>
+                    <div class="gauge-arc-fill" id="arc-progreso"></div>
+                    <div class="gauge-icon"><i class="fa-solid fa-person-walking"></i></div>
+                </div>
+            </div>
+
+            <div class="grid-metrics">
+                <div class="metric-box">
+                    <p class="metric-title">Distancia</p>
+                    <div class="metric-num" id="res-distancia">0 m</div>
+                </div>
+                <div class="metric-box">
+                    <p class="metric-title">Energía</p>
+                    <div class="metric-num" id="res-energia">0 J</div>
+                </div>
+                <div class="metric-box">
+                    <p class="metric-title">Calorías</p>
+                    <div class="metric-num" id="res-calorias">0 kcal</div>
+                </div>
+                <div class="metric-box">
+                    <p class="metric-title">Tiempo estimado</p>
+                    <div class="metric-num" id="res-tiempo">0 min</div>
+                </div>
+            </div>
+
+            <button class="btn-save-route" id="btn-guardar">Guardar ruta</button>
+        </div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        const distancia = urlParams.get('distancia') || "0 m";
+        const energia = urlParams.get('energia') || "0 J";
+        const calorias = urlParams.get('calorias') || "0 kcal";
+        const tiempo = urlParams.get('tiempo') || "0 min";
+        const terreno = urlParams.get('terreno') || "Plano";
+
+        document.getElementById('res-distancia').innerText = distancia;
+        document.getElementById('res-energia').innerText = energia;
+        document.getElementById('res-calorias').innerText = calorias;
+        document.getElementById('res-tiempo').innerText = tiempo;
+
+        const txtEsfuerzo = document.getElementById('txt-esfuerzo');
+        const arcProgreso = document.getElementById('arc-progreso');
+
+        const terrenoNormalizado = terreno.toLowerCase();
+
+        if (terrenoNormalizado.includes("pronunciada") || terrenoNormalizado.includes("subida")) {
+            txtEsfuerzo.innerText = "Alto";
+            txtEsfuerzo.style.color = "#ef4444";
+            arcProgreso.style.borderColor = "#ef4444";
+            arcProgreso.style.transform = "rotate(135deg)";
+        } else if (terrenoNormalizado.includes("moderada")) {
+            txtEsfuerzo.innerText = "Moderado";
+            txtEsfuerzo.style.color = "#f97316";
+            arcProgreso.style.borderColor = "#f97316";
+            arcProgreso.style.transform = "rotate(90deg)";
+        } else if (terrenoNormalizado.includes("leve")) {
+            txtEsfuerzo.innerText = "Leve";
+            txtEsfuerzo.style.color = "#eab308";
+            arcProgreso.style.borderColor = "#eab308";
+            arcProgreso.style.transform = "rotate(45deg)";
+        } else {
+            txtEsfuerzo.innerText = "Bajo";
+            txtEsfuerzo.style.color = "#22c55e";
+            arcProgreso.style.borderColor = "#22c55e";
+            arcProgreso.style.transform = "rotate(15deg)";
+        }
+
+        // --- SISTEMA DE GUARDADO PERSISTENTE ---
+        document.getElementById('btn-guardar').addEventListener('click', function(event) {
+            event.preventDefault(); 
+
+            let historialRutas = JSON.parse(localStorage.getItem('historialRutas')) || [];
+
+            const nuevaRuta = {
+                id: Date.now(),
+                fecha: new Date().toLocaleDateString('es-ES'),
+                hora: new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
+                terreno: terreno,
+                distancia: distancia,
+                energia: energia,
+                calorias: calorias,
+                tiempo: tiempo,
+                esfuerzo: txtEsfuerzo.innerText
+            };
+
+            historialRutas.unshift(nuevaRuta);
+            localStorage.setItem('historialRutas', JSON.stringify(historialRutas));
+
+            // location.replace evita guardar basura en el historial de navegación hacia atrás
+            window.location.replace("dashboard.html");
+        });
+    </script>
+</body>
+</html>

@@ -123,3 +123,35 @@ body.high-contrast .btn-accessibility {
 body.high-contrast .btn-accessibility img {
     filter: invert(0) brightness(0);
 }
+
+
+
+
+
+
+
+
+
+/* ==========================================================================
+   AJUSTE DE PRECISIÓN PARA PANTALLAS CON MAPA (EVITA DESBORDES)
+   ========================================================================== */
+
+/* 1. Forzamos al teléfono a cortar absolutamente todo lo que toque sus esquinas redondeadas */
+.wrapper-movil {
+    overflow: hidden !important;
+}
+
+/* 2. Clase especial para remover el padding e impedir que el mapa se descuadre */
+.contenido-mapa-full {
+    padding: 0 !important;
+    overflow: hidden !important;
+}
+
+/* 3. Aseguramos que la barra de navegación se quede pegada al fondo real del teléfono */
+.menu-inferior, .custom-bottom-nav {
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    z-index: 9999 !important; /* Pasa por encima del mapa de Leaflet */
+}

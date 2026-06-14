@@ -2,289 +2,610 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IntegriSpace 2.0 - Nueva Ruta</title>
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/ruta.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>IntegriSpace 2.0 - Trazado y Análisis</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
     <style>
-        /* Estilos base garantizados para el contenedor móvil */
-        .route-layout, .route-layout * {
+        * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-        }
-        .route-layout {
-            display: flex;
-            flex-direction: column;
-            gap: 16px; 
-            padding: 20px 12px 100px 12px;
-        }
-        .section-title {
-            font-size: 15px;
-            font-weight: 700;
-            color: #a855f7;
-            margin-bottom: 2px;
-            display: block;
-            letter-spacing: 0.5px;
-        }
-        .route-card {
-            background: rgba(30, 41, 59, 0.45);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 16px;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-        }
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-        .input-group label {
-            font-size: 13px;
-            color: #94a3b8;
-            font-weight: 600;
-        }
-        .route-input {
-            width: 100%;
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            color: #ffffff;
-            font-size: 14px;
-            padding: 10px 12px;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-        .route-input:focus {
-            border-color: #6366f1;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
-        /* Banner informativo del perfil cargado automáticamente */
-        .profile-badge-banner {
-            background: rgba(99, 102, 241, 0.1);
-            border: 1px solid rgba(99, 102, 241, 0.2);
-            border-radius: 12px;
-            padding: 12px;
+        body {
+            background: #020617;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* --- ENVOLTORIO EXACTO DEL DASHBOARD --- */
+        .wrapper-movil {
+            position: relative;
+            width: 412px;
+            max-width: 412px;
+            height: 880px;
+            max-height: 880px;
+            border-radius: px;
+            background: #0f172a;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            contain: strict;
+            outline: 12px solid #1e293b;
+            box-sizing: border-box;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.85);
+        }
+
+        .contenido-app {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- PANTALLA 1: MAPA --- */
+        #pantalla-mapa {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-map-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 24px 16px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            background: linear-gradient(to bottom, rgba(15, 23, 42, 0.95) 60%, rgba(15, 23, 42, 0));
+            z-index: 1000;
         }
-        .profile-badge-banner.movilidad-activa {
-            background: rgba(168, 85, 247, 0.1);
-            border-color: rgba(168, 85, 247, 0.2);
-        }
-        .badge-icon {
-            width: 32px;
-            height: 32px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
+        .back-btn {
+            width: 38px;
+            height: 38px;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
             display: flex;
             align-items: center;
             justify-content: center;
+            cursor: pointer;
+            text-decoration: none;
         }
-        .badge-icon svg { width: 20px; height: 20px; fill: #6366f1; }
-        .profile-badge-banner.movilidad-activa .badge-icon svg { fill: #a855f7; }
-        
-        .badge-text { display: flex; flex-direction: column; }
-        .badge-text .p-title { font-size: 13px; color: #ffffff; font-weight: 700; }
-        .badge-text .p-desc { font-size: 11px; color: #94a3b8; }
-
-        /* Panel de Resultados del cálculo */
-        .results-box {
-            background: rgba(15, 23, 42, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            border-radius: 12px;
-            padding: 14px;
-            display: none; 
-            flex-direction: column;
-            gap: 8px;
-        }
-        .result-item { display: flex; justify-content: space-between; font-size: 13px; color: #94a3b8; }
-        .result-item strong { color: #ffffff; }
-
-        .btn-calc {
-            background: linear-gradient(135deg, #6366f1, #a855f7);
-            color: #ffffff;
-            border: none;
-            border-radius: 14px;
-            padding: 14px;
-            font-size: 14px;
+        .header-map-overlay h2 {
+            flex: 1;
+            text-align: center;
+            font-size: 22px;
             font-weight: 700;
+            color: #ffffff;
+            margin-right: 38px;
+        }
+
+        .full-map-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        #mapa {
+            width: 100%;
+            height: 100%;
+            background: #0f172a;
+        }
+
+        .leaflet-control-zoom, .leaflet-control-attribution {
+            display: none !important;
+        }
+
+        .map-zoom-controls {
+            position: absolute;
+            top: 95px;
+            left: 16px;
+            display: flex;
+            flex-direction: column;
+            background: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 1000;
+        }
+        .zoom-btn {
+            width: 36px;
+            height: 36px;
+            background: #ffffff;
+            border: none;
+            color: #1e293b;
+            font-size: 20px;
+            font-weight: bold;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            width: 100%;
-            margin-top: 6px;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+        }
+        .zoom-btn:first-child { border-bottom: 1px solid #e2e8f0; }
+
+        .map-actions-sidebar {
+            position: absolute;
+            top: 95px;
+            right: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 1000;
+        }
+        .circle-action-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+            background: #1e293b;
+        }
+        .circle-action-btn.target { color: #f43f5e; border: 1px solid rgba(244, 63, 94, 0.2); }
+        .circle-action-btn.trash { color: #94a3b8; border: 1px solid rgba(255, 255, 255, 0.05); }
+
+        /* BOTTOM SHEET AJUSTADO PARA SUBIR CORRECTAMENTE POR ENCIMA DE LA NAVBAR */
+        .bottom-sheet-panel {
+            position: absolute;
+            bottom: 105px; 
+            left: 12px;
+            right: 12px;
+            background: #0f172a;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            z-index: 1001;
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.6);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            transform: translateY(180px); 
+        }
+        .bottom-sheet-panel.expanded { transform: translateY(0); }
+
+        .sheet-trigger-header {
+            background: #111827;
+            padding: 18px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            border-radius: 24px 24px 0 0;
+        }
+        .sheet-trigger-header span { color: #ffffff; font-size: 16px; font-weight: 700; }
+        .sheet-trigger-header i { color: #94a3b8; font-size: 14px; transition: transform 0.3s ease; }
+        .bottom-sheet-panel.expanded .sheet-trigger-header i { transform: rotate(180deg); }
+
+        .sheet-content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            background: #0f172a;
+            border-radius: 0 0 24px 24px;
         }
 
-        /* Barra de navegación inferior con rutas relativas para producción/GitHub */
+        .grid-metrics-map {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .metric-card {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 14px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .metric-label { color: #94a3b8; font-size: 12px; font-weight: 600; text-transform: uppercase; }
+        .metric-value { font-size: 22px; font-weight: 700; color: #ffffff; }
+        .metric-value span { font-size: 14px; color: #64748b; margin-left: 4px; }
+        .metric-input-select { width: 100%; background: #0f172a; border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 8px; padding: 10px; color: #ffffff; font-size: 14px; outline: none; }
+
+        .btn-primary-action {
+            width: 100%; background: #4f46e5; color: white; border: none; border-radius: 14px; padding: 16px; font-size: 16px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4);
+        }
+
+        /* --- BARRA DE NAVEGACIÓN INFERIOR COPIADA DE TU EJEMPLO --- */
         .custom-bottom-nav {
-            position: fixed !important;
-            bottom: 0 !important;
-            left: 0 !important;
-            width: 100% !important;
-            background: #0c1428 !important; 
-            border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
-            display: flex !important;
-            justify-content: space-around !important;
-            padding: 10px 0 14px 0 !important;
-            z-index: 9999 !important;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #0b1224; 
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0 24px 0;
+            box-sizing: border-box;
+            z-index: 9999;
         }
+
         .custom-nav-item {
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: center !important;
-            gap: 5px !important;
-            color: #55657e !important;
-            text-decoration: none !important;
-            font-size: 12px !important;
-            font-weight: 600 !important;
-            width: 65px !important;
-            background: none !important; 
-            border: none !important;     
-            padding: 0 !important;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 6px;
+            text-decoration: none; 
+            font-size: 12px; 
+            font-weight: 500;
+            color: #64748b; 
+            width: 75px;
+            transition: color 0.2s ease;
         }
-        .custom-nav-item.active { color: #a855f7 !important; }
-        .custom-nav-item svg { width: 24px !important; height: 24px !important; display: block !important; }
+        
+        .custom-nav-item svg { 
+            width: 24px; 
+            height: 24px; 
+        }
+
+        /* Marcamos como activa la sección actual */
+        .custom-nav-item.active span {
+            color: #ffffff;
+            font-weight: 700;
+        }
+
+        /* --- PANTALLA 2: RESULTADOS --- */
+        #pantalla-resultados {
+            width: 100%;
+            height: 100%;
+            display: none; 
+            flex-direction: column;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 2000;
+            background: #0f172a;
+        }
+        .header-analisis {
+            padding: 24px 16px;
+            display: flex;
+            align-items: center;
+            background: #0f172a;
+            flex-shrink: 0;
+        }
+        .header-analisis h2 {
+            flex: 1;
+            text-align: center;
+            font-size: 22px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-right: 38px;
+        }
+        .content-scroll {
+            flex: 1;
+            padding: 0 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
+        }
+        .gauge-card {
+            background: #1e293b;
+            border-radius: 24px;
+            padding: 24px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+        .gauge-label { color: #94a3b8; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .gauge-status { font-size: 28px; font-weight: 800; color: #22c55e; margin-bottom: 16px; }
+        .gauge-visual-container { position: relative; width: 200px; height: 100px; margin: 0 auto; overflow: hidden; }
+        .gauge-arc-bg { position: absolute; width: 200px; height: 200px; border-radius: 50%; border: 18px solid #334155; box-sizing: border-box; }
+        .gauge-arc-fill { position: absolute; width: 200px; height: 200px; border-radius: 50%; border: 18px solid #22c55e; box-sizing: border-box; clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%); transform: rotate(15deg); }
+        .gauge-icon { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); font-size: 24px; color: #ffffff; }
+        
+        .grid-metrics-res {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+        .metric-box {
+            background: #1e293b;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            padding: 18px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+        .metric-title { color: #94a3b8; font-size: 13px; margin-bottom: 8px; font-weight: 500; }
+        .metric-num { font-size: 24px; font-weight: 700; color: #ffffff; }
+        
+        .btn-save-route {
+            width: 100%; background: #22c55e; color: #ffffff; border: none; border-radius: 16px; padding: 18px; font-size: 16px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 20px rgba(34, 197, 94, 0.3); margin-top: 10px; margin-bottom: 30px; flex-shrink: 0;
+        }
     </style>
 </head>
 <body>
 
-    <div class="wrapper-movil" style="position: relative; overflow-y: auto;">
+    <div class="wrapper-movil" style="position: relative; overflow: hidden;">
         <div class="contenido-app">
-            <div class="route-layout">
-                
-                <span class="section-title">Planificar Nueva Ruta</span>
-                
-                <div class="profile-badge-banner" id="bannerPreferencias">
-                    <div class="badge-icon" id="bannerIcon"></div>
-                    <div class="badge-text">
-                        <span class="p-title" id="bannerTitle">Cargando perfil...</span>
-                        <span class="p-desc" id="bannerDesc">Detectando ritmo optimizado</span>
+            
+            <div id="pantalla-mapa">
+                <div class="header-map-overlay">
+                    <a href="dashboard.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
+                    <h2>Nueva ruta</h2>
+                </div>
+
+                <div class="full-map-container">
+                    <div class="map-zoom-controls">
+                        <button class="zoom-btn" id="zoom-in">+</button>
+                        <button class="zoom-btn" id="zoom-out">-</button>
+                    </div>
+                    <div class="map-actions-sidebar">
+                        <button class="circle-action-btn target" id="btn-centrar" title="Buscar mi ubicación GPS"><i class="fa-solid fa-crosshairs"></i></button>
+                        <button class="circle-action-btn trash" id="btn-borrar" title="Limpiar todos los vectores"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+                    <div id="mapa"></div>
+                </div>
+
+                <div class="bottom-sheet-panel" id="bottom-sheet">
+                    <div class="sheet-trigger-header" id="sheet-header">
+                        <span>Configuración de ruta</span>
+                        <i class="fa-solid fa-chevron-up"></i>
+                    </div>
+                    <div class="sheet-content">
+                        <div class="grid-metrics-map">
+                            <div class="metric-card">
+                                <span class="metric-label">Tipo de terreno</span>
+                                <select class="metric-input-select" id="select-terreno">
+                                    <option value="Plano">🟢 Plano</option>
+                                    <option value="Inclinación leve">🟡 Inclinación leve</option>
+                                    <option value="Inclinación moderada">🟠 Inclinación moderada</option>
+                                    <option value="Subida pronunciada">🔴 Subida pronunciada</option>
+                                    <option value="Bajada">🔵 Bajada</option>
+                                </select>
+                            </div>
+                            <div class="metric-card">
+                                <span class="metric-label">Distancia actual</span>
+                                <div class="metric-value" id="distancia-txt">0.00<span>km</span></div>
+                            </div>
+                        </div>
+                        <button class="btn-primary-action" id="btn-evaluar">Evaluar ruta</button>
                     </div>
                 </div>
 
-                <div class="route-card">
-                    <div class="input-group">
-                        <label for="txtOrigen">Punto de Origen:</label>
-                        <input type="text" id="txtOrigen" class="route-input" value="Mi ubicación actual">
-                    </div>
-
-                    <div class="input-group">
-                        <label for="txtDestino">Punto de Destino:</label>
-                        <input type="text" id="txtDestino" class="route-input" placeholder="Ej: Estación Universitaria">
-                    </div>
-
-                    <div class="results-box" id="boxResults">
-                        <div class="result-item">Distancia aproximada: <strong id="resDistancia">0.0 km</strong></div>
-                        <div class="result-item">Ritmo / Condición: <strong id="resRitmo">Normal</strong></div>
-                        <div class="result-item">Tiempo estimado de viaje: <strong id="resTiempo" style="color: #10b981; font-size: 15px;">0 min</strong></div>
-                        <div class="result-item">Gasto energético calculado: <strong id="resCalorias">0 kcal</strong></div>
-                    </div>
-
-                    <button class="btn-calc" id="btnCalcularRuta">Calcular ruta optimizada</button>
-                </div>
-
+                <nav class="custom-bottom-nav">
+                    <a href="dashboard.html" class="custom-nav-item">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3z" fill="#f97316"/>
+                            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8h5z" fill="#22c55e"/>
+                        </svg>
+                        <span>Inicio</span>
+                    </a>
+                    <a href="historial.html" class="custom-nav-item">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6z" fill="#fef08a"/>
+                            <path d="M13 9V3.5L18.5 9H13z" fill="#ca8a04"/>
+                        </svg>
+                        <span>Historial</span>
+                    </a>
+                    <a href="ruta.html" class="custom-nav-item active">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="#a855f7"/>
+                        </svg>
+                        <span>Ruta</span>
+                    </a>
+                    <a href="perfil.html" class="custom-nav-item">
+                        <svg viewBox="0 0 24 24">
+                            <circle cx="12" cy="7" r="4" fill="#c084fc"/>
+                            <path d="M12 14c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="#a855f7"/>
+                        </svg>
+                        <span>Perfil</span>
+                    </a>
+                </nav>
             </div>
-        </div>
 
-        <nav class="custom-bottom-nav">
-            <a href="dashboard.html" class="custom-nav-item">
-                <svg viewBox="0 0 24 24"><path d="M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3z" fill="#55657e"/></svg>
-                <span>Inicio</span>
-            </a>
-            <a href="historial.html" class="custom-nav-item">
-                <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6z" fill="#55657e"/></svg>
-                <span>Historial</span>
-            </a>
-            <a href="ruta.html" class="custom-nav-item active">
-                <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="#a855f7"/></svg>
-                <span>Ruta</span>
-            </a>
-            <a href="perfil.html" class="custom-nav-item">
-                <svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="4" fill="#55657e"/><path d="M12 14c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="#55657e"/></svg>
-                <span>Perfil</span>
-            </a>
-        </nav>
+            <div id="pantalla-resultados">
+                <div class="header-analisis">
+                    <button class="back-btn" id="btn-regresar-mapa"><i class="fa-solid fa-arrow-left"></i></button>
+                    <h2>Resultados</h2>
+                </div>
+
+                <div class="content-scroll">
+                    <div class="gauge-card">
+                        <p class="gauge-label">Nivel de Esfuerzo</p>
+                        <div class="gauge-status" id="txt-esfuerzo">Bajo</div>
+                        <div class="gauge-visual-container">
+                            <div class="gauge-arc-bg"></div>
+                            <div class="gauge-arc-fill" id="arc-progreso"></div>
+                            <div class="gauge-icon"><i class="fa-solid fa-person-walking"></i></div>
+                        </div>
+                    </div>
+
+                    <div class="grid-metrics-res">
+                        <div class="metric-box">
+                            <p class="metric-title">Distancia</p>
+                            <div class="metric-num" id="res-distancia">0 m</div>
+                        </div>
+                        <div class="metric-box">
+                            <p class="metric-title">Energía</p>
+                            <div class="metric-num" id="res-energia">0 J</div>
+                        </div>
+                        <div class="metric-box">
+                            <p class="metric-title">Calorías</p>
+                            <div class="metric-num" id="res-calorias">0 kcal</div>
+                        </div>
+                        <div class="metric-box">
+                            <p class="metric-title">Tiempo estimado</p>
+                            <div class="metric-num" id="res-tiempo">0 min</div>
+                        </div>
+                    </div>
+
+                    <button class="btn-save-route" id="btn-guardar-internamente">Guardar ruta</button>
+                </div>
+            </div>
+
+        </div>
     </div>
 
-    <script src="../js/ruta.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Lee los datos guardados en el LocalStorage de tu app de forma limpia
-            const userProfile = localStorage.getItem('user_profile') || 'general';
-            const userPace = localStorage.getItem('user_pace') || 'camina';
-            const userCompany = localStorage.getItem('user_company') || 'solo';
-            const userWeight = parseFloat(localStorage.getItem('user_weight')) || 85;
+        let coordenadasMóvil = [-12.0345, -76.9915]; 
+        let kilometrosGlobales = 0; 
+        let metrosGlobales = 0;
 
-            const bannerPreferencias = document.getElementById('bannerPreferencias');
-            const bannerIcon = document.getElementById('bannerIcon');
-            const bannerTitle = document.getElementById('bannerTitle');
-            const bannerDesc = document.getElementById('bannerDesc');
+        const map = L.map('mapa').setView(coordenadasMóvil, 15);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
 
-            let factorVelocidad = 4.5; 
-            let paceLabel = "Uso General";
+        let marcadorBase = L.marker(coordenadasMóvil).addTo(map).bindPopup('<b>Estás aquí</b>').openPopup();
 
-            // SVGs limpios para usar según el perfil activo
-            const icons = {
-                general: `<svg viewBox="0 0 24 24"><path d="M13.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM9.8 8.9L7 21.5h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3c1.3 1.5 3.3 2.5 5.5 2.5v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.7-1.1-1-1.8-1-.3 0-.5.1-.8.1L6 8.3v5.2h2V9.9l1.8-1z"/></svg>`,
-                movilidad: `<svg viewBox="0 0 24 24"><circle cx="12" cy="4" r="2"/><path d="M19 13v-2c-2.14 0-4.14-.86-5.66-2.26l-1.47-1.35c-.39-.37-.9-.59-1.46-.59H10c-1.1 0-2 .9-2 2v5c0 1.1.9 2 2 2h3.5l1.5 3.5H19v-2h-2.5l-1.5-3.5H19zm-9 4c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/></svg>`,
-                runner: `<svg viewBox="0 0 24 24"><path d="M13.49 5.48c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm-3.6 13.9l1-4.4 2.1 2v6h2v-7.5l-2.1-2 .6-3c1.3 1.5 3.3 2.5 5.5 2.5v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.7-1.1-1-1.8-1-.3 0-.5.1-.8.1L3.99 8.58v5.2h2V10.2l1.9-1z"/></svg>`,
-                turista: `<svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 11c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-8c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"/></svg>`
+        function solicitarUbicacionReal() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        coordenadasMóvil = [position.coords.latitude, position.coords.longitude];
+                        map.setView(coordenadasMóvil, 16);
+                        marcadorBase.setLatLng(coordenadasMóvil);
+                    },
+                    function(error) { console.warn("Ubicación por defecto."); },
+                    { enableHighAccuracy: true, timeout: 6000 }
+                );
+            }
+        }
+        solicitarUbicacionReal();
+
+        let listaCoordenadas = [];
+        let marcadoresTrazado = [];
+        let vectorRuta = L.polyline([], {color: '#6366f1', weight: 5, opacity: 0.85}).addTo(map);
+
+        map.on('click', function(event) {
+            const puntoClickeado = event.latlng;
+            listaCoordenadas.push(puntoClickeado);
+            const m = L.circleMarker(puntoClickeado, { radius: 6, fillColor: '#a855f7', color: '#ffffff', weight: 2, fillOpacity: 1 }).addTo(map);
+            marcadoresTrazado.push(m);
+            vectorRuta.setLatLngs(listaCoordenadas);
+            calcularDistanciaLineal();
+        });
+
+        function calcularDistanciaLineal() {
+            let metrosTotales = 0;
+            for (let i = 0; i < listaCoordenadas.length - 1; i++) {
+                metrosTotales += listaCoordenadas[i].distanceTo(listaCoordenadas[i+1]);
+            }
+            metrosGlobales = Math.round(metrosTotales);
+            kilometrosGlobales = (metrosTotales / 1000).toFixed(2);
+            document.getElementById('distancia-txt').innerHTML = `${kilometrosGlobales}<span>km</span>`;
+        }
+
+        document.getElementById('zoom-in').addEventListener('click', () => map.zoomIn());
+        document.getElementById('zoom-out').addEventListener('click', () => map.zoomOut());
+        
+        document.getElementById('btn-centrar').addEventListener('click', function() {
+            map.setView(coordenadasMóvil, 16);
+        });
+
+        document.getElementById('btn-borrar').addEventListener('click', function() {
+            marcadoresTrazado.forEach(m => map.removeLayer(m));
+            listaCoordenadas = []; marcadoresTrazado = []; vectorRuta.setLatLngs([]);
+            kilometrosGlobales = 0; metrosGlobales = 0;
+            document.getElementById('distancia-txt').innerHTML = `0.00<span>km</span>`;
+        });
+
+        const bottomSheet = document.getElementById('bottom-sheet');
+        document.getElementById('sheet-header').addEventListener('click', () => bottomSheet.classList.toggle('expanded'));
+
+        let dataCalorias = "0 kcal", dataEnergia = "0 J", dataTiempo = "0 min", dataTerreno = "Plano";
+
+        document.getElementById('btn-evaluar').addEventListener('click', function(e) {
+            e.preventDefault();
+            if (listaCoordenadas.length < 2) return;
+
+            let perfil = JSON.parse(localStorage.getItem('perfilUsuario')) || { peso: 70 };
+            let pesoEfectivo = parseFloat(perfil.peso) || 70;
+            
+            let terrenoRaw = document.getElementById('select-terreno').value;
+            dataTerreno = terrenoRaw.replace(/[^a-zA-ZáéíóúÁÉÍÓÚ\s]/g, '').trim(); 
+
+            const g = 9.81; 
+            const mu = 0.05; 
+            let anguloGrados = 0; 
+            let velocidadKmh = 4.8; 
+
+            if (terrenoRaw.includes("leve")) { anguloGrados = 3; velocidadKmh = 4.3; }
+            else if (terrenoRaw.includes("moderada")) { anguloGrados = 7; velocidadKmh = 3.8; }
+            else if (terrenoRaw.includes("pronunciada")) { anguloGrados = 12; velocidadKmh = 3.0; }
+            else if (terrenoRaw.includes("Bajada")) { anguloGrados = -4; velocidadKmh = 5.0; }
+
+            let theta = (anguloGrados * Math.PI) / 180;
+            let fuerza = pesoEfectivo * g * (Math.sin(theta) + mu * Math.cos(theta));
+            if (fuerza < (pesoEfectivo * g * mu * 0.5)) fuerza = pesoEfectivo * g * mu * 0.5;
+
+            let energiaJ = Math.round(fuerza * metrosGlobales);
+            let caloriasKcal = Math.round(energiaJ / 4184);
+            let tiempoMinutos = (kilometrosGlobales / velocidadKmh) * 60;
+
+            dataEnergia = energiaJ.toLocaleString('es-ES') + " J";
+            dataCalorias = caloriasKcal + " kcal";
+            dataTiempo = tiempoMinutos.toFixed(1) + " min";
+
+            document.getElementById('res-distancia').innerText = metrosGlobales + " m";
+            document.getElementById('res-energia').innerText = dataEnergia;
+            document.getElementById('res-calorias').innerText = dataCalorias;
+            document.getElementById('res-tiempo').innerText = dataTiempo;
+
+            const txtEsfuerzo = document.getElementById('txt-esfuerzo');
+            const arcProgreso = document.getElementById('arc-progreso');
+            const terrNorm = terrenoRaw.toLowerCase();
+
+            if (terrNorm.includes("pronunciada")) {
+                txtEsfuerzo.innerText = "Alto"; txtEsfuerzo.style.color = "#ef4444";
+                arcProgreso.style.borderColor = "#ef4444"; arcProgreso.style.transform = "rotate(135deg)";
+            } else if (terrNorm.includes("moderada")) {
+                txtEsfuerzo.innerText = "Moderado"; txtEsfuerzo.style.color = "#f97316";
+                arcProgreso.style.borderColor = "#f97316"; arcProgreso.style.transform = "rotate(90deg)";
+            } else if (terrNorm.includes("leve")) {
+                txtEsfuerzo.innerText = "Leve"; txtEsfuerzo.style.color = "#eab308";
+                arcProgreso.style.borderColor = "#eab308"; arcProgreso.style.transform = "rotate(45deg)";
+            } else {
+                txtEsfuerzo.innerText = "Bajo"; txtEsfuerzo.style.color = "#22c55e";
+                arcProgreso.style.borderColor = "#22c55e"; arcProgreso.style.transform = "rotate(15deg)";
+            }
+
+            document.getElementById('pantalla-resultados').style.display = 'flex';
+        });
+
+        document.getElementById('btn-regresar-mapa').addEventListener('click', () => {
+            document.getElementById('pantalla-resultados').style.display = 'none';
+        });
+
+        document.getElementById('btn-guardar-internamente').addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            let historialRutas = JSON.parse(localStorage.getItem('integriRutas')) || [];
+
+            const nuevaRuta = {
+                id: Date.now(),
+                fecha: new Date().toLocaleDateString('es-ES'),
+                hora: new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
+                terreno: dataTerreno,
+                distancia: metrosGlobales + " m",
+                energia: dataEnergia,
+                calorias: dataCalorias,
+                tiempo: dataTiempo,
+                esfuerzo: document.getElementById('txt-esfuerzo').innerText
             };
 
-            // Estructura adaptativa para sincronizar con tus preferencias de movilidad
-            if (userProfile === 'movilidad') {
-                bannerPreferencias.classList.add('movilidad-activa');
-                bannerIcon.innerHTML = icons.movilidad;
-                bannerTitle.textContent = "Movilidad Reducida";
-                if (userPace === 'camina') { factorVelocidad = 2.2; paceLabel = "Base Tranquilo"; }
-                else if (userPace === 'prisa') { factorVelocidad = 3.5; paceLabel = "Rápido"; }
-                else { factorVelocidad = 2.8; paceLabel = "Asistida / Silla"; }
-            } else {
-                bannerIcon.innerHTML = icons[userProfile] || icons.general;
-                if(userProfile === 'runner') {
-                    bannerTitle.textContent = "Perfil: Runner";
-                    factorVelocidad = 9.5; paceLabel = "Acondicionamiento / Trote";
-                } else if(userProfile === 'turista') {
-                    bannerTitle.textContent = "Perfil: Turista";
-                    factorVelocidad = 3.0; paceLabel = "Exploración";
-                } else {
-                    bannerTitle.textContent = "Uso General";
-                    factorVelocidad = userPace === 'prisa' ? 5.8 : 4.2;
-                    paceLabel = userPace === 'prisa' ? "Con Prisa" : "Caminando tranquilo";
-                }
-            }
-            
-            bannerDesc.textContent = `Ritmo: ${paceLabel} • ${userCompany === 'solo' ? 'Solo' : 'Acompañado'} • Masa: ${userWeight}kg`;
+            historialRutas.push(nuevaRuta);
+            localStorage.setItem('integriRutas', JSON.stringify(historialRutas));
 
-            // Ejecución del cálculo optimizado de ruta
-            document.getElementById('btnCalcularRuta').addEventListener('click', () => {
-                const dest = document.getElementById('txtDestino').value.trim();
-                if(!dest) return alert("Por favor indica el destino.");
-
-                // Generación controlada de distancias para simulación real
-                const distancia = (Math.random() * (3.5 - 0.8) + 0.8).toFixed(2);
-                const tiempo = Math.round((distancia / factorVelocidad) * 60);
-                
-                let met = 3.2;
-                if(userProfile === 'movilidad') met = 3.8;
-                if(userProfile === 'runner') met = 6.5;
-
-                // Ecuación metabólica adaptada a la masa de carga configurada en el perfil
-                const calorias = Math.round(met * userWeight * (tiempo / 60));
-
-                document.getElementById('resDistancia').textContent = `${distancia} km`;
-                document.getElementById('resRitmo').textContent = paceLabel;
-                document.getElementById('resTiempo').textContent = `${tiempo} min`;
-                document.getElementById('resCalorias').textContent = `${calorias} kcal`;
-                document.getElementById('boxResults').style.display = 'flex';
-            });
+            window.location.href = "dashboard.html";
         });
     </script>
 </body>
