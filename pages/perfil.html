@@ -455,10 +455,20 @@
             }
 
             if (!correoActivo || correoActivo === "usuario@integrispace.com") {
-                correoActivo = Object.keys(localStorage)
-                    .map(key => localStorage.getItem(key))
-                    .find(val => val && val.includes('@')) || "usuario@integrispace.com";
+    correoActivo = Object.keys(localStorage)
+        .map(key => {
+            try {
+                // Intentamos convertir cada elemento de localStorage en un objeto
+                return JSON.parse(localStorage.getItem(key));
+            } catch (e) {
+                // Si no era un JSON (ej. una cadena simple), devolvemos null
+                return null;
             }
+        })
+        // Buscamos el objeto que sea válido y que tenga la propiedad 'email'
+        .find(obj => obj && obj.email)
+        ?.email || "usuario@integrispace.com"; // Extraemos solo el string del email
+}
             
             // Pintar los datos dinámicos obtenidos inmediatamente
             document.getElementById('lblProfileUser').textContent = usuarioActiva;
