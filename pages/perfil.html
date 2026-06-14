@@ -15,7 +15,7 @@
             display: flex;
             flex-direction: column;
             gap: 18px; 
-            padding: 20px 12px 100px 12px;
+            padding: 20px 12px 20px 12px;
         }
         .profile-header {
             text-align: center;
@@ -45,6 +45,11 @@
             font-weight: 700;
             color: #ffffff;
         }
+        .profile-info p {
+            font-size: 14px;
+            color: #94a3b8;
+            margin-top: 4px;
+        }
         .section-title {
             font-size: 15px;
             font-weight: 700;
@@ -62,109 +67,61 @@
             flex-direction: column;
             gap: 16px;
         }
-        .options-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            width: 100%;
-        }
-        .selectable-card {
-            background: rgba(15, 23, 42, 0.4);
-            border: 2px solid rgba(255, 255, 255, 0.04);
-            border-radius: 12px;
-            padding: 14px 10px;
-            text-align: center;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            min-height: 82px;
-            transition: all 0.2s ease;
-        }
-        .selectable-card svg {
-            width: 24px;
-            height: 24px;
-            fill: #64748b;
-            transition: fill 0.2s ease;
-        }
-        .selectable-card span {
-            color: #94a3b8;
-            font-size: 13px;
-            font-weight: 600;
-            line-height: 1.2;
-        }
-        .selectable-card.active {
-            background: rgba(99, 102, 241, 0.15);
-            border-color: #6366f1;
-        }
-        .selectable-card.active svg { fill: #6366f1; }
-        .selectable-card.active span { color: #ffffff; }
 
-        .pace-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-            margin-top: 4px;
-            padding-top: 14px;
-            border-top: 1px solid rgba(255, 255, 255, 0.06);
-        }
-        .pace-chip {
-            background: rgba(15, 23, 42, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 10px;
-            padding: 10px 8px;
-            text-align: center;
-            color: #64748b;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .pace-chip.active {
-            background: rgba(168, 85, 247, 0.12);
-            border-color: #a855f7;
-            color: #ffffff;
-        }
-
-        /* Input de Masa Corporal */
-        .weight-manual-box {
+        /* Estructura limpia de filas del listado */
+        .list-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 4px;
-            padding: 10px 12px;
-            background: rgba(15, 23, 42, 0.4);
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
         }
-        .weight-manual-box label {
-            font-size: 13px;
-            color: #94a3b8;
-            font-weight: 600;
+        .list-row:last-of-type {
+            border-bottom: none;
+            padding-bottom: 0;
         }
+        .list-row-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+        .list-row-left svg {
+            width: 18px;
+            height: 18px;
+            fill: #94a3b8;
+        }
+        .list-row-left label {
+            font-size: 14px;
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        /* Contenedores de entrada e interactivos */
         .weight-input-container {
             display: flex;
             align-items: center;
             gap: 6px;
         }
-        .txt-weight {
-            width: 70px;
-            background: rgba(30, 41, 59, 0.9);
-            border: 1px solid rgba(168, 85, 247, 0.3);
+        .txt-weight, .custom-input-date, .clean-select-interactive {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 8px;
             color: #ffffff;
             font-size: 14px;
-            font-weight: 700;
-            text-align: center;
-            padding: 5px 4px;
+            font-weight: 600;
             outline: none;
-            transition: border-color 0.2s;
+            transition: all 0.2s;
         }
-        .txt-weight:focus {
-            border-color: #a855f7;
-            box-shadow: 0 0 8px rgba(168, 85, 247, 0.25);
+        .txt-weight {
+            width: 65px;
+            text-align: center;
+            padding: 4px;
+        }
+        .custom-input-date {
+            padding: 4px 8px;
+            font-family: inherit;
+            text-align: right;
         }
         .weight-unit {
             font-size: 13px;
@@ -172,7 +129,46 @@
             font-weight: 700;
         }
 
-        /* Botón Guardar Preferencias */
+        /* selectores estilo Dropdown interactivo */
+        .clean-select-interactive {
+            background: transparent;
+            border: none;
+            color: #a855f7;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 4px 18px 4px 4px; 
+            text-align: right;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 100%;
+        }
+
+        /* Forzar el fondo oscuro en el desplegable nativo */
+        .clean-select-interactive option {
+            background-color: #1e293b; 
+            color: #ffffff; 
+        }
+
+        /* Flecha del selector */
+        .select-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            max-width: 190px; 
+        }
+        
+        .select-wrapper::before {
+            content: "▼";
+            font-size: 9px;
+            color: #a855f7;
+            position: absolute;
+            right: 2px;
+            pointer-events: none;
+        }
+
+        /* Botones de acción */
         .btn-save {
             background: linear-gradient(135deg, #059669, #10b981);
             color: #ffffff;
@@ -195,25 +191,29 @@
             opacity: 0.95;
             box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
         }
-
+        
+        /* Botón de cierre de sesión */
         .btn-logout {
+            position: absolute;
+            top: 20px;
+            right: 20px;
             background: rgba(239, 68, 68, 0.1);
             color: #ef4444;
-            border: 1px solid rgba(239, 68, 68, 0.2);
-            border-radius: 14px;
-            padding: 14px;
-            font-size: 14px;
-            font-weight: 700;
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            width: 100%;
-            margin-top: 4px;
+            z-index: 10;
             transition: all 0.2s;
         }
-        .btn-logout:hover { background: rgba(239, 68, 68, 0.16); }
+        .btn-logout:hover { 
+            background: rgba(239, 68, 68, 0.2); 
+            transform: scale(1.05);
+        }
 
         .custom-bottom-nav {
             position: absolute !important;
@@ -244,11 +244,72 @@
         }
         .custom-nav-item.active { color: #6366f1 !important; }
         .custom-nav-item svg { width: 24px !important; height: 24px !important; display: block !important; }
+
+        /* Estilos para el cambio de tema claro */
+        body.light-theme { background-color: #f8fafc; }
+        body.light-theme .profile-info h2 { color: #0f172a; }
+        body.light-theme .profile-info p { color: #64748b; }
+        body.light-theme .info-card { background: #ffffff; border-color: #e2e8f0; }
+        body.light-theme .list-row { border-bottom-color: #e2e8f0; }
+        body.light-theme .list-row-left label { color: #334155; }
+        body.light-theme .list-row-left svg { fill: #64748b; }
+        body.light-theme .txt-weight, body.light-theme .custom-input-date { background: #ffffff; border-color: #cbd5e1; color: #0f172a; }
+        body.light-theme .btn-logout { background: rgba(239, 68, 68, 0.08); }
+        body.light-theme .clean-select-interactive option { background-color: #ffffff; color: #0f172a; }
+
+        /* Alerta interna de la App */
+        .custom-internal-alert {
+            position: absolute;
+            top: -100px;
+            left: 12px;
+            right: 12px;
+            background-color: #1e293b;
+            border-left: 4px solid #10b981;
+            padding: 14px 16px;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10000;
+            transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .custom-internal-alert.show {
+            top: 15px;
+        }
+        .alert-text {
+            color: #ffffff;
+            font-size: 13.5px;
+            font-weight: 600;
+        }
+        .alert-close-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
 
     <div class="wrapper-movil" style="position: relative; overflow: hidden;">
+        
+        <div class="custom-internal-alert" id="appInternalAlert">
+            <span class="alert-text" id="appInternalAlertText">¡Preferencias guardadas exitosamente!</span>
+            <button class="alert-close-btn" id="appInternalAlertBtn">Aceptar</button>
+        </div>
+        
+        <button class="btn-logout" id="btnExitSession" title="Cerrar sesión">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+                <line x1="12" y1="2" x2="12" y2="12"></line>
+            </svg>
+        </button>
+
         <div class="contenido-app">
             <div class="profile-layout">
                 
@@ -259,54 +320,78 @@
                         </svg>
                     </div>
                     <div class="profile-info">
-                        <h2 id="lblProfileUser">Usuario</h2>
+                        <h2 id="lblProfileUser">Cargando...</h2>
+                        <p id="lblProfileEmail">cargando@integrispace.com</p>
                     </div>
                 </div>
 
-                <span class="section-title">Tu Perfil de Movilidad</span>
+                <span class="section-title">Información Personal</span>
                 <div class="info-card">
-                    <div class="options-grid" id="gridMobility">
-                        <div class="selectable-card active" data-profile="general">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M13.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM9.8 8.9L7 21.5h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3c1.3 1.5 3.3 2.5 5.5 2.5v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.7-1.1-1-1.8-1-.3 0-.5.1-.8.1L6 8.3v5.2h2V9.9l1.8-1z"/>
-                            </svg>
-                            <span>Usuario General</span>
-                        </div>
-                        
-                        <div class="selectable-card" data-profile="movilidad">
-                            <svg viewBox="0 0 24 24">
-                                <circle cx="12" cy="4" r="2"/>
-                                <path d="M19 13v-2c-2.14 0-4.14-.86-5.66-2.26l-1.47-1.35c-.39-.37-.9-.59-1.46-.59H10c-1.1 0-2 .9-2 2v5c0 1.1.9 2 2 2h3.5l1.5 3.5H19v-2h-2.5l-1.5-3.5H19zm-9 4c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/>
-                            </svg>
-                            <span>Movilidad Reducida</span>
-                        </div>
 
-                        <div class="selectable-card" data-profile="runner">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M13.49 5.48c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm-3.6 13.9l1-4.4 2.1 2v6h2v-7.5l-2.1-2 .6-3c1.3 1.5 3.3 2.5 5.5 2.5v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.7-1.1-1-1.8-1-.3 0-.5.1-.8.1L3.99 8.58v5.2h2V10.2l1.9-1z"/>
-                            </svg>
-                            <span>Runner</span>
+                    <div class="list-row">
+                        <div class="list-row-left">
+                            <svg viewBox="0 0 24 24"><path d="M12 2c1.1 0 2 .9 2 2v1.08c3.39.49 6 3.39 6 6.92 0 3.87-3.13 7-7 7s-7-3.13-7-7c0-3.53 2.61-6.43 6-6.92V4c0-1.1.9-2 2-2zm0 18c4.41 0 8-3.59 8-8s-3.59-8-8-8-8 3.59-8 8 3.59 8 8 8z"/></svg>
+                            <label for="txtWeightValue">Peso corporal</label>
                         </div>
-                        <div class="selectable-card" data-profile="turista">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 11c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-8c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"/>
-                            </svg>
-                            <span>Turista</span>
-                        </div>
-                    </div>
-
-                    <div class="pace-container" id="gridPace">
-                        <div class="pace-chip active" data-pace="camina" id="paceCamina">🚶 Camina tranquilo</div>
-                        <div class="pace-chip" data-pace="prisa" id="pacePrisa">⚡ Va con prisa</div>
-                        <div class="pace-chip" data-pace="corre" id="paceCorre">🏃 Trote / Corre</div>
-                        <div class="pace-chip" data-pace="explora" id="paceExplora">📸 Explora el área</div>
-                    </div>
-
-                    <div class="weight-manual-box">
-                        <label for="txtWeightValue">Masa corporal:</label>
                         <div class="weight-input-container">
                             <input type="number" id="txtWeightValue" class="txt-weight" value="70" min="20" max="250">
                             <span class="weight-unit">kg</span>
+                        </div>
+                    </div>
+
+                    <div class="list-row">
+                        <div class="list-row-left">
+                            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            <label for="gridMobility">Tipo de usuario</label>
+                        </div>
+                        <div class="select-wrapper">
+                            <select id="gridMobility" class="clean-select-interactive">
+                                <option value="general">Usuario General</option>
+                                <option value="movilidad">Movilidad Reducida</option>
+                                <option value="runner">Runner</option>
+                                <option value="turista">Turista</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="list-row">
+                        <div class="list-row-left">
+                            <svg viewBox="0 0 24 24"><path d="M13.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM9.8 8.9L7 21.5h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3c1.3 1.5 3.3 2.5 5.5 2.5v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.7-1.1-1-1.8-1-.3 0-.5.1-.8.1L6 8.3v5.2h2V9.9l1.8-1z"/></svg>
+                            <label for="gridPace">Nivel de actividad</label>
+                        </div>
+                        <div class="select-wrapper">
+                            <select id="gridPace" class="clean-select-interactive">
+                                <option value="camina" id="paceCamina">🚶 Camina tranquilo</option>
+                                <option value="prisa" id="pacePrisa">⚡ Va con prisa</option>
+                                <option value="corre" id="paceCorre">🏃 Trote / Corre</option>
+                                <option value="explora" id="paceExplora">📸 Explora el área</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="list-row">
+                        <div class="list-row-left">
+                            <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg>
+                            <label for="txtBirthdate">Fecha de nacimiento</label>
+                        </div>
+                        <input type="date" id="txtBirthdate" class="custom-input-date">
+                    </div>
+
+                </div>
+
+                <span class="section-title">Personalización</span>
+                <div class="info-card">
+                    <div class="list-row">
+                        <div class="list-row-left">
+                            <svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-3zm0 15c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"/></svg>
+                            <label for="selTheme">Tema de la app</label>
+                        </div>
+                        <div class="select-wrapper">
+                            <select id="selTheme" class="clean-select-interactive">
+                                <option value="device">Según dispositivo</option>
+                                <option value="dark">Oscuro</option>
+                                <option value="light">Claro</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -318,15 +403,6 @@
                         <polyline points="7 3 7 8 15 8"></polyline>
                     </svg>
                     Guardar preferencias
-                </button>
-
-                <button class="btn-logout" id="btnExitSession">
-                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                        <polyline points="16 17 21 12 16 7"></polyline>
-                        <line x1="21" y1="12" x2="9" y2="12"></line>
-                    </svg>
-                    Cerrar sesión
                 </button>
 
             </div>
@@ -365,122 +441,147 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const usuarioActiva = localStorage.getItem('sesionActiva') || "Usuario General";
+            // CORRECCIÓN CLAVE: Buscar múltiples opciones comunes donde el registro guarda los datos
+            const usuarioActiva = localStorage.getItem('user_name') || localStorage.getItem('username') || localStorage.getItem('sesionActiva') || "Usuario General";
+            const correoActivo = localStorage.getItem('user_email') || localStorage.getItem('email') || "usuario@integrispace.com";
+            
+            // Pintar inmediatamente en los labels de la cabecera
             document.getElementById('lblProfileUser').textContent = usuarioActiva;
+            document.getElementById('lblProfileEmail').textContent = correoActivo;
 
             const txtWeightValue = document.getElementById('txtWeightValue');
-            const mobilityCards = document.querySelectorAll('#gridMobility .selectable-card');
-            const paceChips = document.querySelectorAll('#gridPace .pace-chip');
+            const txtBirthdate = document.getElementById('txtBirthdate');
+            const selTheme = document.getElementById('selTheme');
+            
+            const selectMobility = document.getElementById('gridMobility');
+            const selectPace = document.getElementById('gridPace');
 
             const chipCamina = document.getElementById('paceCamina');
             const chipPrisa = document.getElementById('pacePrisa');
             const chipCorre = document.getElementById('paceCorre');
 
+            // Alerta interna
+            const internalAlert = document.getElementById('appInternalAlert');
+            const internalAlertText = document.getElementById('appInternalAlertText');
+            const internalAlertBtn = document.getElementById('appInternalAlertBtn');
+
+            function showCustomAlert(message, callback = null) {
+                internalAlertText.textContent = message;
+                internalAlert.classList.add('show');
+                
+                const newBtn = internalAlertBtn.cloneNode(true);
+                internalAlertBtn.parentNode.replaceChild(newBtn, internalAlertBtn);
+                
+                newBtn.addEventListener('click', () => {
+                    internalAlert.classList.remove('show');
+                    if (callback) callback();
+                });
+            }
+
+            // Cargar datos del perfil guardados
             const savedWeight = localStorage.getItem('user_weight');
             const savedProfile = localStorage.getItem('user_profile');
             const savedPace = localStorage.getItem('user_pace');
+            const savedBirthdate = localStorage.getItem('user_birthdate');
+            const savedTheme = localStorage.getItem('user_theme') || 'device';
 
-            // Textos adaptados de forma simplificada y respetuosa
-            function renderInclusiveTexts(perfil) {
-                if (perfil === "movilidad") {
-                    chipCamina.innerHTML = "♿ Movilidad reducida (Base)";
-                    chipPrisa.innerHTML = "⚡ Movilidad reducida (Rápido)";
-                    chipCorre.innerHTML = "💪 Movilidad reducida (Intenso)";
+            if (savedWeight) txtWeightValue.value = savedWeight;
+            if (savedBirthdate) txtBirthdate.value = savedBirthdate;
+            selTheme.value = savedTheme;
+
+            // Manejo de Temas
+            function applyTheme(themeMode) {
+                if (themeMode === 'light') {
+                    document.body.classList.add('light-theme');
+                } else if (themeMode === 'dark') {
+                    document.body.classList.remove('light-theme');
                 } else {
-                    chipCamina.innerHTML = "🚶 Camina tranquilo";
-                    chipPrisa.innerHTML = "⚡ Va con prisa";
-                    chipCorre.innerHTML = "🏃 Trote / Corre";
+                    const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+                    if (prefersLight) {
+                        document.body.classList.add('light-theme');
+                    } else {
+                        document.body.classList.remove('light-theme');
+                    }
                 }
             }
 
-            if (savedWeight) txtWeightValue.value = savedWeight;
-            
+            selTheme.addEventListener('change', (e) => {
+                applyTheme(e.target.value);
+            });
+
+            window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', () => {
+                if (selTheme.value === 'device') applyTheme('device');
+            });
+
+            applyTheme(savedTheme);
+
+            // Textos Inclusivos dinámicos
+            function renderInclusiveTexts(perfil) {
+                if (perfil === "movilidad") {
+                    chipCamina.text = "♿ Movilidad reducida (Base)";
+                    chipPrisa.text = "⚡ Movilidad reducida (Rápido)";
+                    chipCorre.text = "💪 Movilidad reducida (Intenso)";
+                } else {
+                    chipCamina.text = "🚶 Camina tranquilo";
+                    chipPrisa.text = "⚡ Va con prisa";
+                    chipCorre.text = "🏃 Trote / Corre";
+                }
+            }
+
             if (savedProfile) {
-                mobilityCards.forEach(c => c.classList.remove('active'));
-                const target = document.querySelector(`[data-profile="${savedProfile}"]`);
-                if (target) target.classList.add('active');
+                selectMobility.value = savedProfile;
                 renderInclusiveTexts(savedProfile);
             } else {
                 renderInclusiveTexts('general');
             }
 
             if (savedPace) {
-                paceChips.forEach(c => c.classList.remove('active'));
-                const target = document.querySelector(`[data-pace="${savedPace}"]`);
-                if (target) target.classList.add('active');
+                selectPace.value = savedPace;
             }
 
-            function clearPaceActive() {
-                paceChips.forEach(c => c.classList.remove('active'));
-            }
-
-            mobilityCards.forEach(card => {
-                card.addEventListener('click', () => {
-                    mobilityCards.forEach(c => c.classList.remove('active'));
-                    card.classList.add('active');
-                    
-                    const perfil = card.getAttribute('data-profile');
-                    clearPaceActive();
-                    renderInclusiveTexts(perfil);
-                    
-                    if (perfil === "movilidad") {
-                        const target = document.querySelector('[data-pace="camina"]');
-                        if(target) target.classList.add('active');
-                    } else if (perfil === "runner") {
-                        const target = document.querySelector('[data-pace="corre"]');
-                        if(target) target.classList.add('active');
-                    } else if (perfil === "turista") {
-                        const target = document.querySelector('[data-pace="explora"]');
-                        if(target) target.classList.add('active');
-                    } else {
-                        const target = document.querySelector('[data-pace="camina"]');
-                        if(target) target.classList.add('active');
-                    }
-                });
-            });
-
-            paceChips.forEach(chip => {
-                chip.addEventListener('click', () => {
-                    clearPaceActive();
-                    chip.classList.add('active');
-                });
-            });
-
-            if (!savedWeight && (usuarioActiva.toLowerCase().includes("dominguez") || usuarioActiva === "admin")) {
-                mobilityCards.forEach(c => c.classList.remove('active'));
-                const targetMobility = document.querySelector('[data-profile="movilidad"]');
-                if (targetMobility) targetMobility.classList.add('active');
+            // Lógica de cambio reactiva para el selector de tipo de usuario
+            selectMobility.addEventListener('change', () => {
+                const perfil = selectMobility.value;
+                renderInclusiveTexts(perfil);
                 
-                clearPaceActive();
-                renderInclusiveTexts('movilidad');
-                const targetPace = document.querySelector('[data-pace="camina"]');
-                if(targetPace) targetPace.classList.add('active');
+                if (perfil === "movilidad") {
+                    selectPace.value = "camina";
+                } else if (perfil === "runner") {
+                    selectPace.value = "corre";
+                } else if (perfil === "turista") {
+                    selectPace.value = "explora";
+                } else {
+                    selectPace.value = "camina";
+                }
+            });
 
+            // Ajustes automáticos para casos específicos basados en el nombre de la sesión
+            if (!savedWeight && (usuarioActiva.toLowerCase().includes("dominguez") || usuarioActiva === "admin")) {
+                selectMobility.value = "movilidad";
+                renderInclusiveTexts('movilidad');
+                selectPace.value = "camina";
                 txtWeightValue.value = "85";
             }
 
+            // Guardar Preferencias
             document.getElementById('btnSaveConfig').addEventListener('click', () => {
-                const activeProfileCard = document.querySelector('#gridMobility .selectable-card.active');
-                const activePaceChip = document.querySelector('#gridPace .pace-chip.active');
-                
-                const currentWeight = txtWeightValue.value;
-                const currentProfile = activeProfileCard ? activeProfileCard.getAttribute('data-profile') : 'general';
-                const currentPace = activePaceChip ? activePaceChip.getAttribute('data-pace') : 'camina';
+                localStorage.setItem('user_weight', txtWeightValue.value);
+                localStorage.setItem('user_profile', selectMobility.value || 'general');
+                localStorage.setItem('user_pace', selectPace.value || 'camina');
+                localStorage.setItem('user_birthdate', txtBirthdate.value);
+                localStorage.setItem('user_theme', selTheme.value);
 
-                localStorage.setItem('user_weight', currentWeight);
-                localStorage.setItem('user_profile', currentProfile);
-                localStorage.setItem('user_pace', currentPace);
-
-                alert("¡Preferencias guardadas exitosamente!");
+                showCustomAlert("¡Preferencias guardadas exitosamente!");
             });
 
+            // Cierre seguro de sesión
             document.getElementById('btnExitSession').addEventListener('click', () => {
-                localStorage.removeItem('sesionActiva');
-                localStorage.removeItem('user_weight');
-                localStorage.removeItem('user_profile');
-                localStorage.removeItem('user_pace');
-                alert("Cerrando sesión de forma segura...");
-                window.location.href = '../index.html';
+                localStorage.clear();
+                sessionStorage.clear();
+                
+                showCustomAlert("Cerrando sesión de forma segura...", () => {
+                    window.location.replace('../index.html');
+                });
             });
         });
     </script>

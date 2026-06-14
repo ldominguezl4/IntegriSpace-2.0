@@ -7,16 +7,20 @@
     <link rel="stylesheet" href="../css/style.css">
     <style>
         /* --- RESETEO ESTRUCTURAL ANTI-DESPLAZAMIENTO DEL MARCO --- */
+        .historial-main-layout, .historial-main-layout * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
         .historial-main-layout {
             display: flex;
             flex-direction: column;
             height: 100%;
             width: 100%;
-            box-sizing: border-box;
             padding: 24px 16px 90px 16px;
         }
 
-        /* --- CABECERA ORIGINAL --- */
+        /* --- CABECERA ESTILIZADA --- */
         .historial-header-top {
             display: flex;
             justify-content: space-between;
@@ -38,7 +42,7 @@
             padding: 6px 14px;
             border-radius: 20px;
             font-size: 13px;
-            font-weight: 700;
+            font-weight: 600;
             cursor: pointer;
             transition: background 0.2s;
         }
@@ -63,13 +67,16 @@
             text-align: center;
             border-radius: 14px;
             font-size: 13px;
-            font-weight: 600;
+            font-weight: 500;
             cursor: pointer;
+            user-select: none;
+            transition: all 0.2s ease;
         }
 
         .filtro-bubble.active {
             background: #6366f1;
             color: #ffffff;
+            font-weight: 600;
             box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
         }
 
@@ -89,7 +96,7 @@
             background: transparent;
         }
 
-        /* --- TARJETAS COMPACTAS --- */
+        /* --- TARJETAS COMPACTAS Y LIMPIAS --- */
         .rutas-historial-card {
             background: rgba(22, 32, 51, 0.6);
             border: 1px solid rgba(255, 255, 255, 0.04);
@@ -116,11 +123,12 @@
         .ruta-card-title-block span {
             font-size: 12px;
             color: #64748b;
+            font-weight: 500;
         }
 
         .esfuerzo-pill-badge {
             font-size: 11px;
-            font-weight: 700;
+            font-weight: 600;
             padding: 5px 12px;
             border-radius: 8px;
             text-transform: uppercase;
@@ -130,7 +138,7 @@
         .pill-bajo { background: rgba(34, 197, 94, 0.15); color: #22c55e; }
         .pill-leve { background: rgba(234, 179, 8, 0.15); color: #eab308; }
 
-        /* --- FILA DE MÉTRICAS HORIZONTALES SECUNDARIAS --- */
+        /* --- FILA DE MÉTRICAS HORIZONTALES --- */
         .ruta-card-metrics-row {
             display: flex;
             justify-content: space-between;
@@ -155,7 +163,7 @@
         .metric-sub-box span {
             color: #94a3b8;
             font-size: 13px;
-            font-weight: 700;
+            font-weight: 600;
         }
 
         /* --- MENÚ INFERIOR UNIFICADO --- */
@@ -168,7 +176,7 @@
             border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
             display: flex !important;
             justify-content: space-around !important;
-            padding: 10px 0 14px 0 !important;
+            padding: 12px 0 16px 0 !important;
             z-index: 9999 !important;
             border-radius: 0 0 30px 30px;
         }
@@ -176,18 +184,18 @@
             display: flex !important;
             flex-direction: column !important;
             align-items: center !important;
-            gap: 5px !important;
-            color: #55657e !important;
+            gap: 4px !important;
+            color: #64748b !important;
             text-decoration: none !important;
-            font-size: 12px !important;
+            font-size: 11px !important;
             font-weight: 600 !important;
-            width: 65px !important;
+            width: 60px !important;
             background: none !important; 
             border: none !important;     
             padding: 0 !important;
         }
         .custom-nav-item.active { color: #6366f1 !important; }
-        .custom-nav-item svg { width: 24px !important; height: 24px !important; display: block !important; }
+        .custom-nav-item svg { width: 22px !important; height: 22px !important; display: block !important; }
 
         /* --- MODAL OSCURO --- */
         .custom-modal-overlay {
@@ -224,8 +232,11 @@
         .custom-modal-text {
             color: #94a3b8; font-size: 14px; line-height: 1.5; margin-bottom: 20px;
         }
+        
         .custom-modal-actions {
-            display: flex; gap: 10px; justify-content: center;
+            display: flex; 
+            gap: 10px; 
+            justify-content: center;
         }
         .btn-modal {
             padding: 10px 16px; border-radius: 8px; font-size: 14px; font-weight: 600;
@@ -250,9 +261,9 @@
                 </div>
 
                 <div class="filtros-historial-row">
-                    <div class="filtro-bubble active">Todas</div>
-                    <div class="filtro-bubble">Esta semana</div>
-                    <div class="filtro-bubble">Este mes</div>
+                    <div class="filtro-bubble active" id="filter-all">Todas</div>
+                    <div class="filtro-bubble" id="filter-week">Esta semana</div>
+                    <div class="filtro-bubble" id="filter-month">Este mes</div>
                 </div>
 
                 <div class="historial-cards-scrollable-zone" id="contenedorDeTarjetas">
@@ -311,21 +322,62 @@
             const btnCancelDelete = document.getElementById('btnCancelDelete');
             const btnConfirmDelete = document.getElementById('btnConfirmDelete');
             
+            let filtroActivo = 'all';
+
+            function parsearFecha(fechaStr) {
+                if (!fechaStr) return new Date();
+                const partes = fechaStr.split('/');
+                if (partes.length === 3) {
+                    const d = new Date(partes[2], partes[1] - 1, partes[0]);
+                    d.setHours(0, 0, 0, 0);
+                    return d;
+                }
+                const de = new Date();
+                de.setHours(0, 0, 0, 0);
+                return de;
+            }
+
             function cargarHistorialDesdeBaseDeDatos() {
-                // Obtener datos puros sin respaldos falsos creados manualmente
                 const historialRutas = JSON.parse(localStorage.getItem('integriRutas')) || [];
 
                 if (historialRutas.length === 0) {
                     contenedorDeTarjetas.innerHTML = `
-                        <div style="text-align:center; padding:40px; color:#475569; font-size:14px;">
+                        <div style="text-align:center; padding:40px; color:#475569; font-size:14px; font-weight:500;">
                             <p>No hay rutas registradas en tu historial.</p>
                         </div>
                     `;
                     return;
                 }
 
-                // Pintar de las más nuevas a las más viejas (.reverse())
-                contenedorDeTarjetas.innerHTML = [...historialRutas].reverse().map(ruta => {
+                const ahora = new Date();
+                ahora.setHours(0,0,0,0); /* CORREGIDO: ahora (con 'o') asigna correctamente las horas */
+                
+                const rutasFiltradas = historialRutas.filter(ruta => {
+                    if (filtroActivo === 'all') return true;
+
+                    const fechaRuta = parsearFecha(ruta.fecha);
+                    const diferenciaTiempo = ahora - fechaRuta;
+                    const diferenciaDias = Math.floor(diferenciaTiempo / (1000 * 60 * 60 * 24));
+
+                    if (filtroActivo === 'week') {
+                        return diferenciaDias >= 0 && diferenciaDias <= 7; 
+                    }
+                    if (filtroActivo === 'month') {
+                        return diferenciaDias >= 0 && diferenciaDias <= 30; 
+                    }
+                    return true;
+                });
+
+                if (rutasFiltradas.length === 0) {
+                    contenedorDeTarjetas.innerHTML = `
+                        <div style="text-align:center; padding:40px; color:#475569; font-size:14px; font-weight:500;">
+                            <p>No hay rutas para este período de tiempo.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                contenedorDeTarjetas.innerHTML = [...rutasFiltradas].reverse().map(ruta => {
                     const esfrz = (ruta.esfuerzo || "BAJO").toUpperCase();
                     const badgeClass = esfrz === 'LEVE' ? 'pill-leve' : 'pill-bajo';
 
@@ -358,14 +410,27 @@
                 }).join('');
             }
 
-            // Oír si se agrega una ruta en caliente desde la otra pestaña
+            const burbujas = document.querySelectorAll('.filtro-bubble');
+            
+            burbujas.forEach(burbuja => {
+                burbuja.addEventListener('click', (e) => {
+                    burbujas.forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+
+                    if (e.target.id === 'filter-all') filtroActivo = 'all';
+                    if (e.target.id === 'filter-week') filtroActivo = 'week';
+                    if (e.target.id === 'filter-month') filtroActivo = 'month';
+
+                    cargarHistorialDesdeBaseDeDatos();
+                });
+            });
+
             window.addEventListener('storage', (e) => {
                 if (e.key === 'integriRutas') {
                     cargarHistorialDesdeBaseDeDatos();
                 }
             });
 
-            // Eventos del Modal
             document.getElementById('btnClearHistory').addEventListener('click', (e) => {
                 e.preventDefault();
                 deleteModal.classList.add('active');
@@ -385,7 +450,6 @@
                 if (e.target === deleteModal) deleteModal.classList.remove('active');
             });
 
-            // Carga inicial
             cargarHistorialDesdeBaseDeDatos();
         });
     </script>

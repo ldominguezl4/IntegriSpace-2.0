@@ -43,6 +43,7 @@
             font-size: 14px;
             outline: none;
             margin-bottom: 12px;
+            box-sizing: border-box;
         }
         .login-input:focus {
             border-color: #3b82f6;
@@ -78,6 +79,48 @@
             text-align: center;
             display: none;
         }
+
+        /* --- MODAL OSCURO MEJORADO --- */
+        .custom-modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(4px);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 10000;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+        .custom-modal-overlay.active {
+            opacity: 1; pointer-events: auto;
+        }
+        .custom-modal-card {
+            background: #1e293b;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 24px;
+            width: 90%;
+            max-width: 340px;
+            text-align: center;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            transform: scale(0.9);
+            transition: transform 0.2s ease;
+        }
+        .custom-modal-overlay.active .custom-modal-card {
+            transform: scale(1);
+        }
+        .custom-modal-title {
+            color: #ffffff; font-size: 18px; font-weight: 700; margin-bottom: 8px;
+        }
+        .custom-modal-text {
+            color: #94a3b8; font-size: 14px; line-height: 1.5; margin-bottom: 20px;
+        }
+        .btn-modal-confirm {
+            background: #6366f1; color: #ffffff;
+            padding: 10px 24px; border-radius: 8px; font-size: 14px; font-weight: 600;
+            cursor: pointer; border: none; width: 100%; transition: background 0.2s;
+        }
+        .btn-modal-confirm:hover { background: #4f46e5; }
     </style>
 </head>
 <body>
@@ -92,8 +135,8 @@
                 </div>
 
                 <div class="form-container">
-                    <form id="registerForm">
-                        <div id="errorMsg" class="msg-error">Por favor, rellena todos los campos.</div>
+                    <div id="registerFormFake">
+                        <div id="errorMsg" class="msg-error">Por favor, rellena todos los campos correctamente.</div>
                         
                         <input type="text" id="regNombre" class="login-input" placeholder="Nombre" required>
                         <input type="text" id="regApellido" class="login-input" placeholder="Apellido" required>
@@ -101,8 +144,8 @@
                         <input type="email" id="regEmail" class="login-input" placeholder="Correo electrónico" required>
                         <input type="password" id="regPassword" class="login-input" placeholder="Contraseña" required>
                         
-                        <button type="submit" class="btn-register">Registrarse</button>
-                    </form>
+                        <button type="button" id="btnEjecutarRegistro" class="btn-register">Registrarse</button>
+                    </div>
 
                     <p class="back-to-login">
                         ¿Ya tienes cuenta? <a href="index.html">Inicia sesión</a>
@@ -115,6 +158,52 @@
         </div>
     </div>
 
-    <script src="../js/script.js"></script>
+    <div id="successModal" class="custom-modal-overlay">
+        <div class="custom-modal-card">
+            <div class="custom-modal-title">¡Registro Exitoso!</div>
+            <p class="custom-modal-text">Tu cuenta ha sido creada correctamente. Ahora puedes iniciar sesión.</p>
+            <button id="btnModalAccept" class="btn-modal-confirm">Aceptar</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const btnEjecutarRegistro = document.getElementById('btnEjecutarRegistro');
+            const errorMsg = document.getElementById('errorMsg');
+            const successModal = document.getElementById('successModal');
+            const btnModalAccept = document.getElementById('btnModalAccept');
+
+            btnEjecutarRegistro.addEventListener('click', (e) => {
+                e.preventDefault();
+
+                const nombre = document.getElementById('regNombre').value.trim();
+                const apellido = document.getElementById('regApellido').value.trim();
+                const username = document.getElementById('regUsername').value.trim();
+                const email = document.getElementById('regEmail').value.trim();
+                const password = document.getElementById('regPassword').value.trim();
+
+                // Validación de campos vacíos
+                if (!nombre || !apellido || !username || !email || !password) {
+                    errorMsg.style.display = 'block';
+                    return;
+                }
+
+                errorMsg.style.display = 'none';
+
+                // Guardar en el LocalStorage local para el login posterior
+                const usuario = { nombre, apellido, username, email, password };
+                localStorage.setItem('usuarioRegistrado', JSON.stringify(usuario));
+
+                // Mostrar nuestro modal oscuro
+                successModal.classList.add('active');
+            });
+
+            // Acción del botón del modal elegante
+            btnModalAccept.addEventListener('click', () => {
+                successModal.classList.remove('active');
+                window.location.href = 'index.html'; 
+            });
+        });
+    </script>
 </body>
 </html>
