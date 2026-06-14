@@ -441,18 +441,33 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // CORRECCIÓN CLAVE: Buscar múltiples opciones comunes donde el registro guarda los datos
-            const usuarioActiva = localStorage.getItem('user_name') || localStorage.getItem('username') || localStorage.getItem('sesionActiva') || "Usuario General";
-            const correoActivo = localStorage.getItem('user_email') || localStorage.getItem('email') || "usuario@integrispace.com";
             
-            // Pintar inmediatamente en los labels de la cabecera
+            // 1. SISTEMA INTELIGENTE DE DETECCIÓN DE REGISTROS (Mapeo dinámico)
+            // Esto analiza el localStorage buscando cualquier correo con '@' y cualquier cadena de texto válida de usuario
+            let usuarioActiva = localStorage.getItem('user_name') || localStorage.getItem('username') || localStorage.getItem('sesionActiva');
+            let correoActivo = localStorage.getItem('user_email') || localStorage.getItem('email') || localStorage.getItem('correo');
+
+            // Búsqueda ciega si las llaves principales fallan (Común en entornos locales file:///)
+            if (!usuarioActiva || usuarioActiva === "Usuario General") {
+                usuarioActiva = Object.keys(localStorage)
+                    .map(key => localStorage.getItem(key))
+                    .find(val => val && !val.includes('@') && val.length > 2 && val !== "device" && val !== "dark" && val !== "light" && val !== "general" && val !== "camina") || "Usuario General";
+            }
+
+            if (!correoActivo || correoActivo === "usuario@integrispace.com") {
+                correoActivo = Object.keys(localStorage)
+                    .map(key => localStorage.getItem(key))
+                    .find(val => val && val.includes('@')) || "usuario@integrispace.com";
+            }
+            
+            // Pintar los datos dinámicos obtenidos inmediatamente
             document.getElementById('lblProfileUser').textContent = usuarioActiva;
             document.getElementById('lblProfileEmail').textContent = correoActivo;
 
+            // Elementos de la interfaz
             const txtWeightValue = document.getElementById('txtWeightValue');
             const txtBirthdate = document.getElementById('txtBirthdate');
             const selTheme = document.getElementById('selTheme');
-            
             const selectMobility = document.getElementById('gridMobility');
             const selectPace = document.getElementById('gridPace');
 
@@ -460,7 +475,7 @@
             const chipPrisa = document.getElementById('pacePrisa');
             const chipCorre = document.getElementById('paceCorre');
 
-            // Alerta interna
+            // Control de Alerta interna (Evitamos llamadas externas)
             const internalAlert = document.getElementById('appInternalAlert');
             const internalAlertText = document.getElementById('appInternalAlertText');
             const internalAlertBtn = document.getElementById('appInternalAlertBtn');
@@ -478,7 +493,7 @@
                 });
             }
 
-            // Cargar datos del perfil guardados
+            // Cargar datos guardados del perfil
             const savedWeight = localStorage.getItem('user_weight');
             const savedProfile = localStorage.getItem('user_profile');
             const savedPace = localStorage.getItem('user_pace');
@@ -497,22 +512,11 @@
                     document.body.classList.remove('light-theme');
                 } else {
                     const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
-                    if (prefersLight) {
-                        document.body.classList.add('light-theme');
-                    } else {
-                        document.body.classList.remove('light-theme');
-                    }
+                    document.body.classList.toggle('light-theme', prefersLight);
                 }
             }
 
-            selTheme.addEventListener('change', (e) => {
-                applyTheme(e.target.value);
-            });
-
-            window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', () => {
-                if (selTheme.value === 'device') applyTheme('device');
-            });
-
+            selTheme.addEventListener('change', (e) => applyTheme(e.target.value));
             applyTheme(savedTheme);
 
             // Textos Inclusivos dinámicos
@@ -535,35 +539,20 @@
                 renderInclusiveTexts('general');
             }
 
-            if (savedPace) {
-                selectPace.value = savedPace;
-            }
+            if (savedPace) selectPace.value = savedPace;
 
-            // Lógica de cambio reactiva para el selector de tipo de usuario
+            // Reactividad del selector de tipo de usuario
             selectMobility.addEventListener('change', () => {
                 const perfil = selectMobility.value;
                 renderInclusiveTexts(perfil);
                 
-                if (perfil === "movilidad") {
-                    selectPace.value = "camina";
-                } else if (perfil === "runner") {
-                    selectPace.value = "corre";
-                } else if (perfil === "turista") {
-                    selectPace.value = "explora";
-                } else {
-                    selectPace.value = "camina";
-                }
+                if (perfil === "movilidad") selectPace.value = "camina";
+                else if (perfil === "runner") selectPace.value = "corre";
+                else if (perfil === "turista") selectPace.value = "explora";
+                else selectPace.value = "camina";
             });
 
-            // Ajustes automáticos para casos específicos basados en el nombre de la sesión
-            if (!savedWeight && (usuarioActiva.toLowerCase().includes("dominguez") || usuarioActiva === "admin")) {
-                selectMobility.value = "movilidad";
-                renderInclusiveTexts('movilidad');
-                selectPace.value = "camina";
-                txtWeightValue.value = "85";
-            }
-
-            // Guardar Preferencias
+            // Guardar Preferencias manteniendo el usuario del login activo intacto
             document.getElementById('btnSaveConfig').addEventListener('click', () => {
                 localStorage.setItem('user_weight', txtWeightValue.value);
                 localStorage.setItem('user_profile', selectMobility.value || 'general');
@@ -571,14 +560,17 @@
                 localStorage.setItem('user_birthdate', txtBirthdate.value);
                 localStorage.setItem('user_theme', selTheme.value);
 
+                // Forzar que el correo y usuario detectados se queden bien anclados
+                localStorage.setItem('user_email', correoActivo);
+                localStorage.setItem('user_name', usuarioActiva);
+
                 showCustomAlert("¡Preferencias guardadas exitosamente!");
             });
 
-            // Cierre seguro de sesión
+            // Cierre seguro de sesión (Limpia almacenamiento para permitir nuevos registros)
             document.getElementById('btnExitSession').addEventListener('click', () => {
                 localStorage.clear();
                 sessionStorage.clear();
-                
                 showCustomAlert("Cerrando sesión de forma segura...", () => {
                     window.location.replace('../index.html');
                 });
