@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>IntegriSpace 2.0 - Trazado y Análisis</title>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-touch-fullscreen" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="IntegriSpace">
+    
+    <link rel="apple-touch-icon" href="../assets/logo_integrispace.png">
+    <link rel="manifest" href="../manifest.json">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -205,7 +213,7 @@
             width: 100%; background: #4f46e5; color: white; border: none; border-radius: 14px; padding: 16px; font-size: 16px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4);
         }
 
-        /* --- CLON CLAVEDEL NAVBAR DEL DASHBOARD (TAMAÑO FIJO) --- */
+        /* --- CLON CLAVE DEL NAVBAR DEL DASHBOARD (TAMAÑO FIJO) --- */
         .custom-bottom-nav {
             position: absolute !important; bottom: 0 !important; left: 0 !important; width: 100% !important;
             background: #0c1428 !important; border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
@@ -416,33 +424,67 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        let coordenadasMóvil = [-12.0345, -76.9915]; 
+        let coordenadasMóvil = [-12.0345, -76.9915]; // Coordenada por defecto inicial
         let kilometrosGlobales = 0; 
         let metrosGlobales = 0;
 
+        // Inicializar contenedor de Leaflet
         const map = L.map('mapa').setView(coordenadasMóvil, 15);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
 
+        // Marcador del usuario en el mapa
         let marcadorBase = L.marker(coordenadasMóvil).addTo(map).bindPopup('<b>Estás aquí</b>').openPopup();
 
-        function solicitarUbicacionReal() {
+        // Almacenamiento global del proceso de escucha satelital
+        let idRastreoGPS = null;
+
+        function activarUbicacionTiempoReal() {
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
+                // Escucha reactiva continua de coordenadas por hardware GPS móvil
+                idRastreoGPS = navigator.geolocation.watchPosition(
                     function(position) {
-                        coordenadasMóvil = [position.coords.latitude, position.coords.longitude];
-                        map.setView(coordenadasMóvil, 16);
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        coordenadasMóvil = [lat, lng];
+
+                        // Reposiciona el punto dinámicamente sin congelar la app
                         marcadorBase.setLatLng(coordenadasMóvil);
-                        setTimeout(() => { map.invalidateSize(); }, 400);
+                        
+                        // Resuelve fallos visuales de carga asíncrona de polígonos en el mapa
+                        map.invalidateSize();
+                        console.log("GPS Sincronizado en tiempo real:", coordenadasMóvil);
                     },
-                    function(error) { console.warn("Ubicación por defecto."); },
-                    { enableHighAccuracy: true, timeout: 6000 }
+                    function(error) {
+                        switch(error.code) {
+                            case error.PERMISSION_DENIED:
+                                console.warn("Petición GPS denegada por el navegador del terminal móvil.");
+                                break;
+                            case error.POSITION_UNAVAILABLE:
+                                console.warn("Información de red satelital inalcanzable temporalmente.");
+                                break;
+                            case error.TIMEOUT:
+                                console.warn("Saturación: tiempo de espera para lectura de geolocalización excedido.");
+                                break;
+                        }
+                    },
+                    { 
+                        enableHighAccuracy: true, // Forzar uso de antena interna GPS en teléfonos
+                        timeout: 10000,           // Margen de tolerancia extendido a 10 segundos
+                        maximumAge: 0             // Invalida respuestas anteriores cacheadas en memoria
+                    }
                 );
+            } else {
+                alert("Este navegador no dispone de pasarela integrada para Geolocalización nativa.");
             }
         }
-        solicitarUbicacionReal();
 
-        setTimeout(() => { map.invalidateSize(); }, 200);
+        // Ejecución inmediata del flujo reactivo del mapa
+        activarUbicacionTiempoReal();
 
+        // Parche visual de seguridad diferido para Leaflet
+        setTimeout(() => { map.invalidateSize(); }, 500);
+
+        // --- MANEJO DE VECTORES Y TRAZADO MANUAL ---
         let listaCoordenadas = [];
         let marcadoresTrazado = [];
         let vectorRuta = L.polyline([], {color: '#6366f1', weight: 5, opacity: 0.85}).addTo(map);
@@ -466,11 +508,13 @@
             document.getElementById('distancia-txt').innerHTML = `${kilometrosGlobales}<span>km</span>`;
         }
 
+        // Botonera de interacción visual
         document.getElementById('zoom-in').addEventListener('click', () => map.zoomIn());
         document.getElementById('zoom-out').addEventListener('click', () => map.zoomOut());
         
         document.getElementById('btn-centrar').addEventListener('click', function() {
-            map.setView(coordenadasMóvil, 16);
+            map.setView(coordenadasMóvil, 17); // Ajuste reactivo con zoom cerrado al centrar el GPS
+            marcadorBase.openPopup();
         });
 
         document.getElementById('btn-borrar').addEventListener('click', function() {
@@ -480,6 +524,7 @@
             document.getElementById('distancia-txt').innerHTML = `0.00<span>km</span>`;
         });
 
+        // Control y lógica de interfaz inferior Desplegable
         const bottomSheet = document.getElementById('bottom-sheet');
         document.getElementById('sheet-header').addEventListener('click', () => bottomSheet.classList.toggle('expanded'));
 
@@ -547,6 +592,7 @@
             document.getElementById('pantalla-resultados').style.display = 'none';
         });
 
+        // Almacenamiento local del historial para sincronizar con historial.html
         document.getElementById('btn-guardar-internamente').addEventListener('click', function(e) {
             e.preventDefault();
             
@@ -569,7 +615,13 @@
 
             window.location.href = "dashboard.html";
         });
+        
+        // REGISTRO LOCAL DEL SERVICE WORKER (Para asegurar persistencia offline)
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/IntegriSpace-2.0/sw.js')
+                .then(() => console.log('PWA vinculada con éxito.'))
+                .catch(err => console.warn('Aviso SW:', err));
+        }
     </script>
 </body>
 </html>
-
