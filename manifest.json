@@ -9,7 +9,7 @@
   "start_url": "/IntegriSpace-2.0/pages/index.html",
   "icons": [
     {
-      "src": "./assets/logo_integrispace.png",
+      "src": "/IntegriSpace-2.0/assets/logo_integrispace.png",
       "type": "image/png",
       "sizes": "512x512"
     }

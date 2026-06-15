@@ -344,6 +344,7 @@
             // LOGICA DE LA PWA (Buscando sw.js en la raíz '../')
             // ==========================================================
             if ('serviceWorker' in navigator) {
+    // Usamos la ruta absoluta respetando mayúsculas exactas de tu URL de GitHub
     navigator.serviceWorker.register('/IntegriSpace-2.0/sw.js')
         .then(() => console.log('¡Service Worker activo en producción!'))
         .catch(err => console.log('Error de PWA:', err));
