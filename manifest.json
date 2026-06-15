@@ -5,7 +5,8 @@
   "background_color": "#0c1428",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "start_url": "./pages/index.html",
+  "scope": "/IntegriSpace-2.0/",
+  "start_url": "/IntegriSpace-2.0/pages/index.html",
   "icons": [
     {
       "src": "./assets/logo_integrispace.png",
