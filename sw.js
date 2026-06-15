@@ -1,10 +1,10 @@
 const CACHE_NAME = 'integrispace-cache-v2';
 const ASSETS = [
-  './pages/index.html',
-  './pages/historial.html',
-  './css/style.css',
-  './css/historial.css',
-  './assets/logo_integrispace.png'
+  '/IntegriSpace-2.0/pages/index.html',
+  '/IntegriSpace-2.0/pages/historial.html',
+  '/IntegriSpace-2.0/css/style.css',
+  '/IntegriSpace-2.0/css/historial.css',
+  '/IntegriSpace-2.0/assets/logo_integrispace.png'
 ];
 
 // Instalar la PWA y guardar archivos esenciales en el celular
@@ -14,7 +14,7 @@ self.addEventListener('install', (e) => {
   );
 });
 
-// Activar y limpiar versiones viejas de la caché en el dispositivo
+// Activar y limpiar versiones viejas de la caché
 self.addEventListener('activate', (e) => {
   e.waitUntil(
     caches.keys().then((keys) => {
@@ -27,7 +27,7 @@ self.addEventListener('activate', (e) => {
   );
 });
 
-// Permitir que cargue el contenido sin internet (Offline mode)
+// Permitir que cargue el contenido sin internet (Offline)
 self.addEventListener('fetch', (e) => {
   e.respondWith(
     fetch(e.request).catch(() => caches.match(e.request))
