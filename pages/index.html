@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IntegriSpace 2.0 - Login</title>
     
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="../manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="#0c1428">
     <meta name="apple-mobile-web-app-title" content="IntegriSpace">
-    <link rel="apple-touch-icon" href="assets/logo_integrispace.png">
+    <link class="pwa-icon" rel="apple-touch-icon" href="../assets/logo_integrispace.png">
 
     <link rel="stylesheet" href="../css/style.css">
     <style>
@@ -230,11 +230,15 @@
             font-size: 14px; 
             cursor: pointer; 
             width: 100%; 
-            margin: 15px 0 5px 0; 
+            margin: 15px 0 15px 0; 
             box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
             align-items: center;
             justify-content: center;
             gap: 8px;
+            transition: background 0.3s;
+        }
+        .btn-pwa-descargar:hover {
+            background: #4338ca;
         }
     </style>
 </head>
@@ -332,14 +336,12 @@
                 });
             }
 
-            // ==========================================
-            // LÓGICA DE INSTALACIÓN DE LA PWA
-            // ==========================================
-            
-            // 1. Registro oficial del Service Worker (sw.js que está en la raíz)
+            // ==========================================================
+            // LOGICA DE LA PWA (Buscando sw.js en la raíz '../')
+            // ==========================================================
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('sw.js')
-                    .then(() => console.log('Service Worker de la PWA activo.'))
+                navigator.serviceWorker.register('../sw.js')
+                    .then(() => console.log('¡Service Worker activo!'))
                     .catch(err => console.log('Error de PWA:', err));
             }
 
@@ -347,45 +349,39 @@
             const btnInstalar = document.getElementById('btnInstalar');
             const guiaIphone = document.getElementById('guiaIphone');
 
-            // Detectores de entorno móvil
             const esIphone = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
             const esAppInstalada = window.matchMedia('(display-mode: standalone)').matches;
 
-            // Si es iPhone y navega desde el buscador normal, forzamos la aparición del botón
-            if (esIphone && !esAppInstalada) {
+            // Si es iPhone o una simulación/vista móvil y no está instalada, mostramos el botón
+            if ((esIphone || window.innerWidth < 768) && !esAppInstalada) {
                 if (btnInstalar) btnInstalar.style.display = 'flex';
             }
 
-            // Capturar trigger de instalación en sistemas Android/Windows
+            // Capturar trigger de instalación en Android / Chrome
             window.addEventListener('beforeinstallprompt', (e) => {
                 e.preventDefault();
                 eventoInstalacion = e;
-                // Si la app no ha sido instalada aún, hacemos visible nuestro botón
                 if (!esAppInstalada && btnInstalar) {
                     btnInstalar.style.display = 'flex';
                 }
             });
 
-            // Escuchador de clics en el botón de descarga
             if (btnInstalar) {
                 btnInstalar.addEventListener('click', async () => {
                     if (esIphone) {
-                        // En iPhone abrimos el instructivo visual inferior
                         if (guiaIphone) guiaIphone.style.display = 'block';
                     } else if (eventoInstalacion) {
-                        // En Android disparamos la instalación nativa del sistema
                         eventoInstalacion.prompt();
                         const { outcome } = await eventoInstalacion.userChoice;
                         if (outcome === 'accepted') {
                             btnInstalar.style.display = 'none';
                         }
                     } else {
-                        alert("Abre este enlace desde el navegador del celular para poder descargarlo.");
+                        alert("Para instalarlo nativamente en PC, usa el icono de instalación (pantallita con flecha) que aparece a la derecha en la barra de direcciones de Chrome / Edge.");
                     }
                 });
             }
 
-            // Ocultar automáticamente si la instalación se concreta
             window.addEventListener('appinstalled', () => {
                 if (btnInstalar) btnInstalar.style.display = 'none';
             });
