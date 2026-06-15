@@ -9,8 +9,11 @@
 <meta name="apple-touch-fullscreen" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="IntegriSpace">
-<link rel="apple-touch-icon" href="../assets/logo_integrispace.png">
 
+<link rel="apple-touch-icon" href="/IntegriSpace-2.0/assets/logo_integrispace.png">
+
+
+<link rel="manifest" href="/IntegriSpace-2.0/manifest.json">
     <link rel="stylesheet" href="../css/style.css">
     <style>
         .login-layout {
@@ -340,10 +343,10 @@
             // LOGICA DE LA PWA (Buscando sw.js en la raíz '../')
             // ==========================================================
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('../sw.js')
-                    .then(() => console.log('¡Service Worker activo!'))
-                    .catch(err => console.log('Error de PWA:', err));
-            }
+    navigator.serviceWorker.register('/IntegriSpace-2.0/sw.js')
+        .then(() => console.log('¡Service Worker activo en producción!'))
+        .catch(err => console.log('Error de PWA:', err));
+}
 
             let eventoInstalacion;
             const btnInstalar = document.getElementById('btnInstalar');
