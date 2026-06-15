@@ -1,0 +1,16 @@
+{
+  "name": "IntegriSpace 2.0",
+  "short_name": "IntegriSpace",
+  "theme_color": "#0c1428",
+  "background_color": "#0c1428",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "start_url": "index.html",
+  "icons": [
+    {
+      "src": "assets/logo_integrispace.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}
