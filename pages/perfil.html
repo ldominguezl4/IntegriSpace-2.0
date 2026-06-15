@@ -215,35 +215,42 @@
             transform: scale(1.05);
         }
 
+        /* Configuración de la barra de navegación adaptada */
         .custom-bottom-nav {
-            position: absolute !important;
-            bottom: 0 !important;
-            left: 0 !important;
-            width: 100% !important;
-            background: #0c1428 !important; 
-            border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
-            display: flex !important;
-            justify-content: space-around !important;
-            padding: 10px 0 14px 0 !important;
-            z-index: 9999 !important;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #0c1428; 
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0 14px 0;
+            z-index: 9999;
             border-radius: 0 0 30px 30px;
         }
         .custom-nav-item {
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: center !important;
-            gap: 5px !important;
-            color: #55657e !important;
-            text-decoration: none !important;
-            font-size: 12px !important;
-            font-weight: 600 !important;
-            width: 65px !important;
-            background: none !important; 
-            border: none !important;     
-            padding: 0 !important;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            color: #55657e;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+            width: 65px;
+            background: none; 
+            border: none;     
+            padding: 0;
         }
-        .custom-nav-item.active { color: #6366f1 !important; }
-        .custom-nav-item svg { width: 24px !important; height: 24px !important; display: block !important; }
+        .custom-nav-item.active { 
+            color: #a855f7; 
+        }
+        .custom-nav-item svg { 
+            width: 24px; 
+            height: 24px; 
+            display: block; 
+        }
 
         /* Estilos para el cambio de tema claro */
         body.light-theme { background-color: #f8fafc; }
@@ -443,11 +450,9 @@
         document.addEventListener('DOMContentLoaded', () => {
             
             // 1. SISTEMA INTELIGENTE DE DETECCIÓN DE REGISTROS (Mapeo dinámico)
-            // Esto analiza el localStorage buscando cualquier correo con '@' y cualquier cadena de texto válida de usuario
             let usuarioActiva = localStorage.getItem('user_name') || localStorage.getItem('username') || localStorage.getItem('sesionActiva');
             let correoActivo = localStorage.getItem('user_email') || localStorage.getItem('email') || localStorage.getItem('correo');
 
-            // Búsqueda ciega si las llaves principales fallan (Común en entornos locales file:///)
             if (!usuarioActiva || usuarioActiva === "Usuario General") {
                 usuarioActiva = Object.keys(localStorage)
                     .map(key => localStorage.getItem(key))
@@ -455,20 +460,17 @@
             }
 
             if (!correoActivo || correoActivo === "usuario@integrispace.com") {
-    correoActivo = Object.keys(localStorage)
-        .map(key => {
-            try {
-                // Intentamos convertir cada elemento de localStorage en un objeto
-                return JSON.parse(localStorage.getItem(key));
-            } catch (e) {
-                // Si no era un JSON (ej. una cadena simple), devolvemos null
-                return null;
+                correoActivo = Object.keys(localStorage)
+                    .map(key => {
+                        try {
+                            return JSON.parse(localStorage.getItem(key));
+                        } catch (e) {
+                            return null;
+                        }
+                    })
+                    .find(obj => obj && obj.email)
+                    ?.email || "usuario@integrispace.com";
             }
-        })
-        // Buscamos el objeto que sea válido y que tenga la propiedad 'email'
-        .find(obj => obj && obj.email)
-        ?.email || "usuario@integrispace.com"; // Extraemos solo el string del email
-}
             
             // Pintar los datos dinámicos obtenidos inmediatamente
             document.getElementById('lblProfileUser').textContent = usuarioActiva;
@@ -481,11 +483,11 @@
             const selectMobility = document.getElementById('gridMobility');
             const selectPace = document.getElementById('gridPace');
 
-            const chipCamina = document.getElementById('paceCamina');
-            const chipPrisa = document.getElementById('pacePrisa');
-            const chipCorre = document.getElementById('paceCorre');
+            const paceCamina = document.getElementById('paceCamina');
+            const pacePrisa = document.getElementById('pacePrisa');
+            const paceCorre = document.getElementById('paceCorre');
 
-            // Control de Alerta interna (Evitamos llamadas externas)
+            // Control de Alerta interna
             const internalAlert = document.getElementById('appInternalAlert');
             const internalAlertText = document.getElementById('appInternalAlertText');
             const internalAlertBtn = document.getElementById('appInternalAlertBtn');
@@ -532,13 +534,13 @@
             // Textos Inclusivos dinámicos
             function renderInclusiveTexts(perfil) {
                 if (perfil === "movilidad") {
-                    chipCamina.text = "♿ Movilidad reducida (Base)";
-                    chipPrisa.text = "⚡ Movilidad reducida (Rápido)";
-                    chipCorre.text = "💪 Movilidad reducida (Intenso)";
+                    paceCamina.text = "♿ Movilidad reducida (Base)";
+                    pacePrisa.text = "⚡ Movilidad reducida (Rápido)";
+                    paceCorre.text = "💪 Movilidad reducida (Intenso)";
                 } else {
-                    chipCamina.text = "🚶 Camina tranquilo";
-                    chipPrisa.text = "⚡ Va con prisa";
-                    chipCorre.text = "🏃 Trote / Corre";
+                    paceCamina.text = "🚶 Camina tranquilo";
+                    pacePrisa.text = "⚡ Va con prisa";
+                    paceCorre.text = "🏃 Trote / Corre";
                 }
             }
 
@@ -562,7 +564,7 @@
                 else selectPace.value = "camina";
             });
 
-            // Guardar Preferencias manteniendo el usuario del login activo intacto
+            // Guardar Preferencias
             document.getElementById('btnSaveConfig').addEventListener('click', () => {
                 localStorage.setItem('user_weight', txtWeightValue.value);
                 localStorage.setItem('user_profile', selectMobility.value || 'general');
@@ -570,14 +572,13 @@
                 localStorage.setItem('user_birthdate', txtBirthdate.value);
                 localStorage.setItem('user_theme', selTheme.value);
 
-                // Forzar que el correo y usuario detectados se queden bien anclados
                 localStorage.setItem('user_email', correoActivo);
                 localStorage.setItem('user_name', usuarioActiva);
 
                 showCustomAlert("¡Preferencias guardadas exitosamente!");
             });
 
-            // Cierre seguro de sesión (Limpia almacenamiento para permitir nuevos registros)
+            // Cierre seguro de sesión
             document.getElementById('btnExitSession').addEventListener('click', () => {
                 localStorage.clear();
                 sessionStorage.clear();
@@ -589,3 +590,4 @@
     </script>
 </body>
 </html>
+

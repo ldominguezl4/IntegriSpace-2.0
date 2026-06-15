@@ -208,7 +208,7 @@
             border-radius: 10px;
             margin-bottom: 12px;
             text-align: center;
-            display: none; /* Controlado dinámicamente por JS */
+            display: none; 
         }
     </style>
 </head>
@@ -266,5 +266,34 @@
     </div>
 
     <script src="../js/script.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const btnEs = document.getElementById('btnLangEs');
+            const btnEn = document.getElementById('btnLangEn');
+
+            function vincularMemoriaIdioma(lang) {
+                localStorage.setItem('idioma', lang);
+                localStorage.setItem('language', lang);
+                localStorage.setItem('lang', lang);
+            }
+
+            if (btnEs) {
+                btnEs.addEventListener('click', () => vincularMemoriaIdioma('es'));
+            }
+            if (btnEn) {
+                btnEn.addEventListener('click', () => vincularMemoriaIdioma('en'));
+            }
+
+            // También nos aseguramos de guardar el usuario activo si se envía el formulario
+            const form = document.getElementById('loginForm');
+            if (form) {
+                form.addEventListener('submit', () => {
+                    const user = document.getElementById('username').value;
+                    if (user) localStorage.setItem('usuarioActivo', user);
+                });
+            }
+        });
+    </script>
 </body>
 </html>

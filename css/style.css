@@ -92,42 +92,52 @@ body {
 }
 
 /* ==========================================================================
-   MODOS DE ACCESIBILIDAD DINÁMICOS CORREGIDOS
+   MODOS DE ACCESIBILIDAD DINÁMICOS CORREGIDOS (FUERZA GLOBAL)
    ========================================================================== */
 
 /* Escala uniforme de fuentes para elementos clave al activar Texto Grande */
-body.large-text .brand-wrapper h1 { font-size: 42px; }
-body.large-text .brand-tagline { font-size: 16px; max-width: 320px; }
-body.large-text .login-input { font-size: 17px; padding: 18px; }
-body.large-text .btn-login { font-size: 18px; padding: 18px; }
-body.large-text .forgot-link, body.large-text .register-prompt { font-size: 16px; }
-body.large-text .acc-option { font-size: 16px; }
+body.large-text .brand-wrapper h1 { font-size: 42px !important; }
+body.large-text .brand-tagline { font-size: 16px !important; max-width: 320px !important; }
+body.large-text .login-input { font-size: 18px !important; padding: 18px !important; }
+body.large-text .btn-login { font-size: 20px !important; padding: 18px !important; }
+body.large-text .forgot-link, body.large-text .register-prompt { font-size: 17px !important; }
+body.large-text .acc-option { font-size: 17px !important; }
+/* Aplica el texto grande a cualquier etiqueta h1, p o input de las otras páginas */
+body.large-text h1, body.large-text p, body.large-text input, body.large-text label, body.large-text span, body.large-text a { 
+    font-size: 18px !important; 
+}
 
 /* Inversión total para el modo Alto Contraste */
 body.high-contrast {
-    --bg-principal: #000000;
-    --bg-tarjeta: #0c0c0c;
-    --borde-tarjeta: #ffffff;
-    --texto-gris: #ffffff;
-    --gradiente-morado: #5145cd;
+    --bg-principal: #000000 !important;
+    --bg-tarjeta: #0c0c0c !important;
+    --borde-tarjeta: #ffffff !important;
+    --texto-gris: #ffffff !important;
+    --texto-blanco: #ffffff !important;
+    --gradiente-morado: #5145cd !important;
 }
 
+/* Forzar cambios de color sobre estilos en línea de formularios secundarios */
+body.high-contrast .wrapper-movil { background-color: #000000 !important; border-color: #ffffff !important; }
+body.high-contrast .contenido-app { background: #000000 !important; }
+body.high-contrast h1, body.high-contrast p, body.high-contrast span { color: #ffffff !important; }
 body.high-contrast .login-input {
-    border: 2px solid #ffffff;
+    background-color: #000000 !important;
+    background: #000000 !important;
+    border: 2px solid #ffffff !important;
+    color: #ffffff !important;
 }
-
+body.high-contrast .btn-login {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: 2px solid #000000 !important;
+}
 body.high-contrast .btn-accessibility {
-    background: #ffffff;
+    background: #ffffff !important;
 }
-
 body.high-contrast .btn-accessibility img {
-    filter: invert(0) brightness(0);
+    filter: invert(0) brightness(0) !important;
 }
-
-
-
-
-
 
 
 

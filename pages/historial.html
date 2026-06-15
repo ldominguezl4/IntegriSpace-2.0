@@ -246,6 +246,36 @@
         .btn-modal-cancel:hover { background: #475569; }
         .btn-modal-confirm { background: #ef4444; color: #ffffff; }
         .btn-modal-confirm:hover { background: #dc2626; }
+
+        /* ==========================================================================
+           ESTILOS ACCESIBILIDAD GLOBALES (SÓLO ADICIONALES, NO MODIFICAN LO ANTERIOR)
+           ========================================================================== */
+        /* Texto Grande */
+        body.taste-texto-grande .historial-header-top h1 { font-size: 32px; }
+        body.taste-texto-grande .btn-borrar-todo { font-size: 16px; }
+        body.taste-texto-grande .filtro-bubble { font-size: 16px; }
+        body.taste-texto-grande .ruta-card-title-block h2 { font-size: 26px; }
+        body.taste-texto-grande .ruta-card-title-block span { font-size: 15px; }
+        body.taste-texto-grande .esfuerzo-pill-badge { font-size: 14px; }
+        body.taste-texto-grande .metric-sub-box p { font-size: 14px; }
+        body.taste-texto-grande .metric-sub-box span { font-size: 16px; }
+        body.taste-texto-grande .custom-nav-item span { font-size: 14px; }
+        body.taste-texto-grande .custom-modal-title { font-size: 22px; }
+        body.taste-texto-grande .custom-modal-text { font-size: 17px; }
+        body.taste-texto-grande .btn-modal { font-size: 16px; }
+
+        /* Alto Contraste */
+        body.taste-alto-contraste { background: #000000 !important; }
+        body.taste-alto-contraste .rutas-historial-card { background: #000000 !important; border: 2px solid #ffffff !important; }
+        body.taste-alto-contraste .filtro-bubble { background: #000000 !important; border: 1px solid #ffffff !important; color: #ffffff !important; }
+        body.taste-alto-contraste .filtro-bubble.active { background: #ffffff !important; color: #000000 !important; font-weight: 900 !important; }
+        body.taste-alto-contraste .btn-borrar-todo { background: #ffffff !important; color: #000000 !important; border: 2px solid #ffffff !important; }
+        body.taste-alto-contraste .custom-bottom-nav { background: #000000 !important; border-top: 2px solid #ffffff !important; }
+        body.taste-alto-contraste .custom-nav-item { color: #ffffff !important; }
+        body.taste-alto-contraste .custom-nav-item.active { text-decoration: underline !important; }
+        body.taste-alto-contraste .custom-modal-card { background: #000000 !important; border: 2px solid #ffffff !important; }
+        body.taste-alto-contraste .btn-modal-cancel { background: #ffffff !important; color: #000000 !important; font-weight: 700; }
+        body.taste-alto-contraste .btn-modal-confirm { background: #000000 !important; color: #ff0000 !important; border: 2px solid #ff0000 !important; font-weight: 700; }
     </style>
 </head>
 <body>
@@ -256,14 +286,14 @@
             <div class="historial-main-layout">
                 
                 <div class="historial-header-top">
-                    <h1>Tu Historial</h1>
-                    <button class="btn-borrar-todo" id="btnClearHistory">Borrar todo</button>
+                    <h1 data-i18n="title">Tu Historial</h1>
+                    <button class="btn-borrar-todo" id="btnClearHistory" data-i18n="clear_all">Borrar todo</button>
                 </div>
 
                 <div class="filtros-historial-row">
-                    <div class="filtro-bubble active" id="filter-all">Todas</div>
-                    <div class="filtro-bubble" id="filter-week">Esta semana</div>
-                    <div class="filtro-bubble" id="filter-month">Este mes</div>
+                    <div class="filtro-bubble active" id="filter-all" data-i18n="filter_all">Todas</div>
+                    <div class="filtro-bubble" id="filter-week" data-i18n="filter_week">Esta semana</div>
+                    <div class="filtro-bubble" id="filter-month" data-i18n="filter_month">Este mes</div>
                 </div>
 
                 <div class="historial-cards-scrollable-zone" id="contenedorDeTarjetas">
@@ -279,38 +309,38 @@
                     <path d="M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3z" fill="#f97316"/>
                     <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8h5z" fill="#22c55e"/>
                 </svg>
-                <span>Inicio</span>
+                <span data-i18n="nav_home">Inicio</span>
             </a>
             <a href="historial.html" class="custom-nav-item active">
                 <svg viewBox="0 0 24 24">
                     <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6z" fill="#fef08a"/>
                     <path d="M13 9V3.5L18.5 9H13z" fill="#ca8a04"/>
                 </svg>
-                <span>Historial</span>
+                <span data-i18n="nav_history">Historial</span>
             </a>
             <a href="ruta.html" class="custom-nav-item">
                 <svg viewBox="0 0 24 24">
                     <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="#a855f7"/>
                 </svg>
-                <span>Ruta</span>
+                <span data-i18n="nav_route">Ruta</span>
             </a>
             <a href="perfil.html" class="custom-nav-item">
                 <svg viewBox="0 0 24 24">
                     <circle cx="12" cy="7" r="4" fill="#c084fc"/>
                     <path d="M12 14c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="#a855f7"/>
                 </svg>
-                <span>Perfil</span>
+                <span data-i18n="nav_profile">Perfil</span>
             </a>
         </nav>
     </div>
 
     <div id="deleteModal" class="custom-modal-overlay">
         <div class="custom-modal-card">
-            <div class="custom-modal-title">¿Borrar historial?</div>
-            <p class="custom-modal-text">Esta acción eliminará de forma permanente todas tus rutas guardadas de vectores. No podrás recuperarlas.</p>
+            <div class="custom-modal-title" data-i18n="modal_title">¿Borrar historial?</div>
+            <p class="custom-modal-text" data-i18n="modal_text">Esta acción eliminará de forma permanente todas tus rutas guardadas de vectores. No podrás recuperarlas.</p>
             <div class="custom-modal-actions">
-                <button id="btnCancelDelete" class="btn-modal btn-modal-cancel">Cancelar</button>
-                <button id="btnConfirmDelete" class="btn-modal btn-modal-confirm">Eliminar</button>
+                <button id="btnCancelDelete" class="btn-modal btn-modal-cancel" data-i18n="modal_cancel">Cancelar</button>
+                <button id="btnConfirmDelete" class="btn-modal btn-modal-confirm" data-i18n="modal_confirm">Eliminar</button>
             </div>
         </div>
     </div>
@@ -323,6 +353,80 @@
             const btnConfirmDelete = document.getElementById('btnConfirmDelete');
             
             let filtroActivo = 'all';
+
+            /* Diccionario de idiomas obligatorio */
+            const i18nTokens = {
+                es: {
+                    title: "Tu Historial",
+                    clear_all: "Borrar todo",
+                    filter_all: "Todas",
+                    filter_week: "Esta semana",
+                    filter_month: "Este mes",
+                    nav_home: "Inicio",
+                    nav_history: "Historial",
+                    nav_route: "Ruta",
+                    nav_profile: "Perfil",
+                    modal_title: "¿Borrar historial?",
+                    modal_text: "Esta acción eliminará de forma permanente todas tus rutas guardadas de vectores. No podrás recuperarlas.",
+                    modal_cancel: "Cancelar",
+                    modal_confirm: "Eliminar",
+                    empty_history: "No hay rutas registradas en tu historial.",
+                    empty_period: "No hay rutas para este período de tiempo.",
+                    lbl_calories: "Calorías",
+                    lbl_energy: "Energía",
+                    lbl_time: "Tiempo",
+                    lbl_today: "Hoy"
+                },
+                en: {
+                    title: "Your History",
+                    clear_all: "Clear all",
+                    filter_all: "All",
+                    filter_week: "This week",
+                    filter_month: "This month",
+                    nav_home: "Home",
+                    nav_history: "History",
+                    nav_route: "Route",
+                    nav_profile: "Profile",
+                    modal_title: "Clear history?",
+                    modal_text: "This action will permanently delete all your saved vector routes. You will not be able to recover them.",
+                    modal_cancel: "Cancel",
+                    modal_confirm: "Delete",
+                    empty_history: "No routes registered in your history.",
+                    empty_period: "No routes found for this period.",
+                    lbl_calories: "Calories",
+                    lbl_energy: "Energy",
+                    lbl_time: "Time",
+                    lbl_today: "Today"
+                }
+            };
+
+            /* Función de aplicación de accesibilidad global */
+            function aplicarConfiguracionesGlobales() {
+                const lang = localStorage.getItem('integriLang') || 'es';
+                const contraste = localStorage.getItem('integriContrast') || 'normal';
+                const textoGrande = localStorage.getItem('integriTextSize') || 'normal';
+
+                // 1. Aplicar Idioma estático
+                document.querySelectorAll('[data-i18n]').forEach(el => {
+                    const token = el.getAttribute('data-i18n');
+                    if (i18nTokens[lang] && i18nTokens[lang][token]) {
+                        el.textContent = i18nTokens[lang][token];
+                    }
+                });
+
+                // 2. Aplicar Clases de Contraste y Texto Grande al body
+                if (contraste === 'alto') {
+                    document.body.classList.add('taste-alto-contraste');
+                } else {
+                    document.body.classList.remove('taste-alto-contraste');
+                }
+
+                if (textoGrande === 'grande') {
+                    document.body.classList.add('taste-texto-grande');
+                } else {
+                    document.body.classList.remove('taste-texto-grande');
+                }
+            }
 
             function parsearFecha(fechaStr) {
                 if (!fechaStr) return new Date();
@@ -338,19 +442,20 @@
             }
 
             function cargarHistorialDesdeBaseDeDatos() {
+                const lang = localStorage.getItem('integriLang') || 'es';
                 const historialRutas = JSON.parse(localStorage.getItem('integriRutas')) || [];
 
                 if (historialRutas.length === 0) {
                     contenedorDeTarjetas.innerHTML = `
                         <div style="text-align:center; padding:40px; color:#475569; font-size:14px; font-weight:500;">
-                            <p>No hay rutas registradas en tu historial.</p>
+                            <p>${i18nTokens[lang].empty_history}</p>
                         </div>
                     `;
                     return;
                 }
 
                 const ahora = new Date();
-                ahora.setHours(0,0,0,0); /* CORREGIDO: ahora (con 'o') asigna correctamente las horas */
+                ahora.setHours(0,0,0,0);
                 
                 const rutasFiltradas = historialRutas.filter(ruta => {
                     if (filtroActivo === 'all') return true;
@@ -371,7 +476,7 @@
                 if (rutasFiltradas.length === 0) {
                     contenedorDeTarjetas.innerHTML = `
                         <div style="text-align:center; padding:40px; color:#475569; font-size:14px; font-weight:500;">
-                            <p>No hay rutas para este período de tiempo.</p>
+                            <p>${i18nTokens[lang].empty_period}</p>
                         </div>
                     `;
                     return;
@@ -380,28 +485,29 @@
                 contenedorDeTarjetas.innerHTML = [...rutasFiltradas].reverse().map(ruta => {
                     const esfrz = (ruta.esfuerzo || "BAJO").toUpperCase();
                     const badgeClass = esfrz === 'LEVE' ? 'pill-leve' : 'pill-bajo';
+                    const fechaAMostrar = ruta.fecha || i18nTokens[lang].lbl_today;
 
                     return `
                         <div class="rutas-historial-card">
                             <div class="ruta-card-top-info">
                                 <div class="ruta-card-title-block">
                                     <h2>${ruta.distancia || '0 m'}</h2>
-                                    <span>${ruta.fecha || 'Hoy'} • ${ruta.hora || '00:00'}</span>
+                                    <span>${fechaAMostrar} • ${ruta.hora || '00:00'}</span>
                                 </div>
                                 <span class="esfuerzo-pill-badge ${badgeClass}">${esfrz}</span>
                             </div>
 
                             <div class="ruta-card-metrics-row">
                                 <div class="metric-sub-box">
-                                    <p>Calorías</p>
+                                    <p>${i18nTokens[lang].lbl_calories}</p>
                                     <span>${ruta.calorias || '0 kcal'}</span>
                                 </div>
                                 <div class="metric-sub-box">
-                                    <p>Energía</p>
+                                    <p>${i18nTokens[lang].lbl_energy}</p>
                                     <span>${ruta.energia || '0 J'}</span>
                                 </div>
                                 <div class="metric-sub-box">
-                                    <p>Tiempo</p>
+                                    <p>${i18nTokens[lang].lbl_time}</p>
                                     <span>${ruta.tiempo || '0 min'}</span>
                                 </div>
                             </div>
@@ -429,6 +535,11 @@
                 if (e.key === 'integriRutas') {
                     cargarHistorialDesdeBaseDeDatos();
                 }
+                // Si cambian las preferencias globales desde otra pestaña/pantalla
+                if (e.key === 'integriLang' || e.key === 'integriContrast' || e.key === 'integriTextSize') {
+                    aplicarConfiguracionesGlobales();
+                    cargarHistorialDesdeBaseDeDatos();
+                }
             });
 
             document.getElementById('btnClearHistory').addEventListener('click', (e) => {
@@ -450,6 +561,8 @@
                 if (e.target === deleteModal) deleteModal.classList.remove('active');
             });
 
+            // Inicialización única
+            aplicarConfiguracionesGlobales();
             cargarHistorialDesdeBaseDeDatos();
         });
     </script>

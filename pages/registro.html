@@ -72,15 +72,20 @@
             text-decoration: none;
             font-weight: bold;
         }
+        
         .msg-error {
+            background: rgba(239, 68, 68, 0.15);
             color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.25);
             font-size: 13px;
-            margin-bottom: 10px;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 12px;
             text-align: center;
             display: none;
         }
 
-        /* --- MODAL OSCURO MEJORADO --- */
+        /* --- MODAL OSCURO ADAPTATIVO COHERENTE --- */
         .custom-modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -121,7 +126,61 @@
             cursor: pointer; border: none; width: 100%; transition: background 0.2s;
         }
         .btn-modal-confirm:hover { background: #4f46e5; }
+
+        /* =========================================================
+           SOPORTE DE ACCESIBILIDAD EMPAREJADO CON TU SCRIPT.JS
+           ========================================================= */
+        body.large-text .register-header h2 { font-size: 36px !important; }
+        body.large-text .register-header p { font-size: 18px !important; }
+        body.large-text .login-input { font-size: 18px !important; padding: 18px; }
+        body.large-text .btn-register { font-size: 18px !important; }
+        body.large-text .back-to-login { font-size: 16px !important; }
+        body.large-text .custom-modal-title { font-size: 22px !important; }
+        body.large-text .custom-modal-text { font-size: 16px !important; }
+
+        body.high-contrast {
+            background-color: #000000 !important;
+        }
+        body.high-contrast .register-layout {
+            background-color: #000000 !important;
+        }
+        body.high-contrast .register-header h2,
+        body.high-contrast .register-header p,
+        body.high-contrast .back-to-login,
+        body.high-contrast .custom-modal-title,
+        body.high-contrast .custom-modal-text {
+            color: #ffffff !important;
+        }
+        body.high-contrast .login-input {
+            background-color: #000000 !important;
+            border: 2px solid #ffffff !important;
+            color: #ffffff !important;
+        }
+        body.high-contrast .login-input::placeholder {
+            color: #ffffff !important;
+            opacity: 0.8;
+        }
+        body.high-contrast .btn-register,
+        body.high-contrast .btn-modal-confirm {
+            background: #ffffff !important;
+            color: #000000 !important;
+            font-weight: 900 !important;
+            border: 2px solid #000000 !important;
+        }
+        body.high-contrast .back-to-login a {
+            color: #ffff00 !important;
+            text-decoration: underline !important;
+        }
+        body.high-contrast .custom-modal-card {
+            background: #000000 !important;
+            border: 2px solid #ffffff !important;
+        }
     </style>
+    
+    <script>
+        if (localStorage.getItem('access_large_text') === 'true') document.documentElement.classList.add('large-text');
+        if (localStorage.getItem('access_high_contrast') === 'true') document.documentElement.classList.add('high-contrast');
+    </script>
 </head>
 <body>
 
@@ -130,25 +189,26 @@
             <div class="register-layout">
                 
                 <div class="register-header">
-                    <h2>Crear Cuenta</h2>
-                    <p>Regístrate para empezar a evaluar rutas</p>
+                    <h2 data-es="Crear Cuenta" data-en="Create Account">Crear Cuenta</h2>
+                    <p data-es="Regístrate para empezar a evaluar rutas" data-en="Register to start evaluating routes">Regístrate para empezar a evaluar rutas</p>
                 </div>
 
                 <div class="form-container">
-                    <div id="registerFormFake">
-                        <div id="errorMsg" class="msg-error">Por favor, rellena todos los campos correctamente.</div>
+                    <form id="registerForm">
+                        <div id="errorMsg" class="msg-error" data-es="Por favor, rellena todos los campos correctamente." data-en="Please fill out all fields correctly.">Por favor, rellena todos los campos correctamente.</div>
                         
-                        <input type="text" id="regNombre" class="login-input" placeholder="Nombre" required>
-                        <input type="text" id="regApellido" class="login-input" placeholder="Apellido" required>
-                        <input type="text" id="regUsername" class="login-input" placeholder="Nombre de usuario" required>
-                        <input type="email" id="regEmail" class="login-input" placeholder="Correo electrónico" required>
-                        <input type="password" id="regPassword" class="login-input" placeholder="Contraseña" required>
+                        <input type="text" id="regNombre" class="login-input" placeholder="Nombre" data-placeholder-es="Nombre" data-placeholder-en="First Name" required>
+                        <input type="text" id="regApellido" class="login-input" placeholder="Apellido" data-placeholder-es="Apellido" data-placeholder-en="Last Name" required>
+                        <input type="text" id="regUsername" class="login-input" placeholder="Nombre de usuario" data-placeholder-es="Nombre de usuario" data-placeholder-en="Username" required>
+                        <input type="email" id="regEmail" class="login-input" placeholder="Correo electrónico" data-placeholder-es="Correo electrónico" data-placeholder-en="Email address" required>
+                        <input type="password" id="regPassword" class="login-input" placeholder="Contraseña" data-placeholder-es="Contraseña" data-placeholder-en="Password" required>
                         
-                        <button type="button" id="btnEjecutarRegistro" class="btn-register">Registrarse</button>
-                    </div>
+                        <button type="submit" id="btnEjecutarRegistro" class="btn-register" data-es="Registrarse" data-en="Register">Registrarse</button>
+                    </form>
 
                     <p class="back-to-login">
-                        ¿Ya tienes cuenta? <a href="index.html">Inicia sesión</a>
+                        <span data-es="¿Ya tienes cuenta?" data-en="Already have an account?">¿Ya tienes cuenta?</span> 
+                        <a href="index.html" data-es="Inicia sesión" data-en="Sign In">Inicia sesión</a>
                     </p>
                 </div>
 
@@ -160,49 +220,81 @@
 
     <div id="successModal" class="custom-modal-overlay">
         <div class="custom-modal-card">
-            <div class="custom-modal-title">¡Registro Exitoso!</div>
-            <p class="custom-modal-text">Tu cuenta ha sido creada correctamente. Ahora puedes iniciar sesión.</p>
-            <button id="btnModalAccept" class="btn-modal-confirm">Aceptar</button>
+            <div class="custom-modal-title" data-es="¡Registro Exitoso!" data-en="Successful Registration!">¡Registro Exitoso!</div>
+            <p class="custom-modal-text" data-es="Tu cuenta ha sido creada correctamente. Ahora puedes iniciar sesión." data-en="Your account has been successfully created. Now you can log in.">Tu cuenta ha sido creada correctamente. Ahora puedes iniciar sesión.</p>
+            <button id="btnModalAccept" class="btn-modal-confirm" data-es="Aceptar" data-en="Accept">Aceptar</button>
         </div>
     </div>
 
+    <script src="../js/script.js"></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Sincronizar el idioma actual usando la función exacta de tu script.js
+            const idiomaActual = localStorage.getItem('app_lang') || 'es';
+            if (typeof aplicarIdioma === 'function') {
+                aplicarIdioma(idiomaActual);
+            }
+
+            // Sincronizar textos manuales especiales (como el span interno del link)
+            document.querySelectorAll('[data-es]').forEach(elem => {
+                const txt = elem.getAttribute(`data-${idiomaActual}`);
+                if (txt && elem.classList.contains('back-to-login')) {
+                    const subSpan = elem.querySelector('span');
+                    if (subSpan) subSpan.textContent = txt;
+                }
+            });
+
+            const registerForm = document.getElementById('registerForm');
             const btnEjecutarRegistro = document.getElementById('btnEjecutarRegistro');
             const errorMsg = document.getElementById('errorMsg');
             const successModal = document.getElementById('successModal');
             const btnModalAccept = document.getElementById('btnModalAccept');
 
-            btnEjecutarRegistro.addEventListener('click', (e) => {
-                e.preventDefault();
+            if (registerForm && btnEjecutarRegistro) {
+                // Interceptamos el click antes de que el formulario dispare el "submit" global
+                btnEjecutarRegistro.addEventListener('click', (e) => {
+                    const nombre = document.getElementById('regNombre').value.trim();
+                    const apellido = document.getElementById('regApellido').value.trim();
+                    const username = document.getElementById('regUsername').value.trim();
+                    const email = document.getElementById('regEmail').value.trim().toLowerCase();
+                    const password = document.getElementById('regPassword').value;
 
-                const nombre = document.getElementById('regNombre').value.trim();
-                const apellido = document.getElementById('regApellido').value.trim();
-                const username = document.getElementById('regUsername').value.trim();
-                const email = document.getElementById('regEmail').value.trim();
-                const password = document.getElementById('regPassword').value.trim();
+                    // Si falta algún campo obligatorio, dejamos que el formulario maneje su validación visual
+                    if (!nombre || !apellido || !username || !email || !password) {
+                        errorMsg.style.display = 'block';
+                        return;
+                    }
 
-                // Validación de campos vacíos
-                if (!nombre || !apellido || !username || !email || !password) {
-                    errorMsg.style.display = 'block';
-                    return;
-                }
+                    // Detenemos por completo la propagación para que script.js no ejecute su alert()
+                    e.preventDefault();
+                    e.stopPropagation();
 
-                errorMsg.style.display = 'none';
+                    errorMsg.style.display = 'none';
 
-                // Guardar en el LocalStorage local para el login posterior
-                const usuario = { nombre, apellido, username, email, password };
-                localStorage.setItem('usuarioRegistrado', JSON.stringify(usuario));
+                    // Guardamos estructurado exactamente igual que tu lógica central
+                    const usuarioNuevo = { nombre, apellido, username, email, password };
+                    localStorage.setItem('usuarioRegistrado', JSON.stringify(usuarioNuevo));
 
-                // Mostrar nuestro modal oscuro
-                successModal.classList.add('active');
-            });
+                    // Levantamos el modal integrado directamente en la interfaz del aplicativo
+                    if (successModal) {
+                        successModal.classList.add('active');
+                    }
+                });
 
-            // Acción del botón del modal elegante
-            btnModalAccept.addEventListener('click', () => {
-                successModal.classList.remove('active');
-                window.location.href = 'index.html'; 
-            });
+                // Evitamos recargas accidentales si presionan Enter
+                registerForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                });
+            }
+
+            if (btnModalAccept) {
+                btnModalAccept.addEventListener('click', () => {
+                    if (successModal) successModal.classList.remove('active');
+                    window.location.href = "index.html";
+                });
+            }
         });
     </script>
 </body>
